@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Primary Database for User, Patient, and Audit Logs
+  postgres:
+    image: postgres:16-alpine
+    container_name: nh_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-securepassword}
+      POSTGRES_DB: ${POSTGRES_DB:-neurohealth}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Helper to enable pgcrypto extension on init
+      - ./infra/init-db:/docker-entrypoint-initdb.d
+
+  # Redis for BullMQ (Async Job Queue for AI)
+  redis:
+    image: redis:alpine
+    container_name: nh_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # Adminer for easy DB visualization (Optional, Dev only)
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

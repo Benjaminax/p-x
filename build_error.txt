@@ -1,0 +1,58 @@
+﻿
+> project-x@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 61 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 3.30s
+At C:\Program 
+Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo         
+     : NotSpecified    : 
+([31mΓ£ù[39m Bu    ild 
+failed in 3.30s    
+:String) [], Remote    
+Exception
+    + FullyQualifiedErr    
+orId : NativeComman    
+dError
+ 
+[31merror during build:
+[31mCould not resolve 
+"../../ui/GlassCard" from "
+src/pages/dashboard/DemoPag
+e.jsx"[31m
+file: [36mC:/Users/kojob/D
+ocuments/GitHub/Project X/P
+roject-X/src/pages/dashboar
+d/DemoPage.jsx[31m
+    at getRollupError (file
+:///C:/Users/kojob/Document
+s/GitHub/Project%20X/Projec
+t-X/node_modules/rollup/dis
+t/es/shared/parseAst.js:402
+:41)
+    at error (file:///C:/Us
+ers/kojob/Documents/GitHub/
+Project%20X/Project-X/node_
+modules/rollup/dist/es/shar
+ed/parseAst.js:398:42)
+    at ModuleLoader.handleI
+nvalidResolvedId (file:///C
+:/Users/kojob/Documents/Git
+Hub/Project%20X/Project-X/n
+ode_modules/rollup/dist/es/
+shared/node-entry.js:21684:
+24)
+    at file:///C:/Users/koj
+ob/Documents/GitHub/Project
+%20X/Project-X/node_modules
+/rollup/dist/es/shared/node
+-entry.js:21644:26[39m
