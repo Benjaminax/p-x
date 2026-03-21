@@ -43,11 +43,14 @@ export default function ControlsPanel({
     return (
         <div className="absolute top-4 right-4 z-50 sm:top-6 sm:right-6 w-auto">
             {/* Compact Neural HUD (basic controls only) */}
-            <div className="flex items-center gap-4 bg-white/85 backdrop-blur-md border border-zinc-100 rounded-2xl px-3 py-2 shadow-lg">
-                <div className="flex items-start gap-4">
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase text-zinc-500 tracking-wide">Burble Flow</span>
-                        <div className="flex items-center gap-2 mt-1">
+            <div className="w-[min(92vw,640px)] rounded-2xl border border-slate-200/70 bg-gradient-to-br from-white/95 via-slate-50/90 to-cyan-50/70 p-3 shadow-[0_10px_30px_rgba(2,6,23,0.14)] backdrop-blur-xl">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div className="rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
+                            <div className="mb-2 flex items-center justify-between">
+                                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Burble Flow</span>
+                                <span className="rounded-full bg-cyan-50 px-2 py-0.5 text-[11px] font-mono font-bold text-cyan-700">{Math.round(burbleUp * 100)}%</span>
+                            </div>
                             <input
                                 aria-label="Burble flow"
                                 type="range"
@@ -56,49 +59,62 @@ export default function ControlsPanel({
                                 step="0.01"
                                 value={burbleUp}
                                 onChange={e => setBurbleUp(parseFloat(e.target.value))}
-                                className="h-1 w-36 accent-sky-600"
+                                className="h-1.5 w-full cursor-pointer accent-cyan-600"
                             />
-                            <span className="text-xs font-mono text-sky-600">{Math.round(burbleUp * 100)}%</span>
+                        </div>
+
+                        <div className="rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5">
+                            <span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Voxel Scale</span>
+                            <div className="flex items-center justify-between gap-2">
+                                <button
+                                    aria-label="decrease voxel"
+                                    onClick={decVoxel}
+                                    className="h-8 w-8 rounded-lg border border-slate-200 bg-slate-50 text-lg leading-none text-slate-700 transition hover:bg-slate-100"
+                                >
+                                    -
+                                </button>
+                                <div className="min-w-[56px] rounded-lg border border-cyan-100 bg-cyan-50 px-2 py-1 text-center text-sm font-bold font-mono text-cyan-800">
+                                    {pointSize.toFixed(1)}
+                                </div>
+                                <button
+                                    aria-label="increase voxel"
+                                    onClick={incVoxel}
+                                    className="h-8 w-8 rounded-lg border border-slate-200 bg-slate-50 text-lg leading-none text-slate-700 transition hover:bg-slate-100"
+                                >
+                                    +
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase text-zinc-500 tracking-wide">Voxel Scale</span>
-                        <div className="flex items-center gap-2 mt-1">
-                            <button aria-label="decrease voxel" onClick={decVoxel} className="w-6 h-6 rounded-md bg-zinc-50 border border-zinc-100 text-zinc-600">-</button>
-                            <div className="text-sm font-bold font-mono w-10 text-center">{pointSize.toFixed(1)}</div>
-                            <button aria-label="increase voxel" onClick={incVoxel} className="w-6 h-6 rounded-md bg-zinc-50 border border-zinc-100 text-zinc-600">+</button>
-                        </div>
+                    <div className="flex items-center justify-end gap-2">
+                        <button
+                            onClick={onReset}
+                            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 px-3 py-2 text-[12px] font-semibold text-white shadow-sm transition hover:brightness-105"
+                            aria-label="Sync Core"
+                        >
+                            <RotateCcw size={14} />
+                            <span>Sync Core</span>
+                        </button>
+
+                        <button
+                            onClick={() => setIsAdvancedOpen(s => !s)}
+                            className="rounded-xl border border-slate-200 bg-white/80 p-2 text-slate-600 transition hover:bg-slate-100"
+                            aria-expanded={isAdvancedOpen}
+                            aria-controls="neural-hud-advanced"
+                            title="Advanced HUD"
+                        >
+                            <Settings2 size={14} />
+                        </button>
+
+                        <button
+                            onClick={toggleFullscreen}
+                            className="rounded-xl border border-slate-200 bg-white/80 p-2 text-slate-600 transition hover:bg-slate-100"
+                            title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+                        >
+                            {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                        </button>
                     </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={onReset}
-                        className="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-[12px] font-semibold shadow-sm"
-                        aria-label="Sync Core"
-                    >
-                        <RotateCcw size={14} />
-                        <span className="ml-2">Sync Core</span>
-                    </button>
-
-                    <button
-                        onClick={() => setIsAdvancedOpen(s => !s)}
-                        className="p-2 rounded-lg bg-zinc-50 border border-zinc-100 text-zinc-600 hover:bg-zinc-100"
-                        aria-expanded={isAdvancedOpen}
-                        aria-controls="neural-hud-advanced"
-                        title="Advanced HUD"
-                    >
-                        <Settings2 size={14} />
-                    </button>
-
-                    <button
-                        onClick={toggleFullscreen}
-                        className="p-2 rounded-lg bg-zinc-50 border border-zinc-100 text-zinc-600 hover:bg-zinc-100"
-                        title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-                    >
-                        {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
-                    </button>
                 </div>
             </div>
 

@@ -90,7 +90,7 @@ services:
     environment:
       PORT: 8000
     ports:
-      - "8000:8000"
+      - "8000:5000"
     volumes:
       - ./backend-ai:/app
       - ./backend-ai/models:/app/models

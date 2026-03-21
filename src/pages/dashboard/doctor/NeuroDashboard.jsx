@@ -240,6 +240,132 @@ export default function NeuroDashboard() {
     }, [analysis]);
 
     const [sessions, setSessions] = useState([]);
+    const [assistantEnabled, setAssistantEnabled] = useState(false);
+    const [assistantListening, setAssistantListening] = useState(false);
+    const [assistantTranscript, setAssistantTranscript] = useState('');
+    const [assistantStatus, setAssistantStatus] = useState('Idle');
+    const recognitionRef = React.useRef(null);
+    const handleAnalyzeRef = React.useRef(null);
+
+    const getPreferredUkFemaleVoice = useCallback(() => {
+        if (!('speechSynthesis' in window)) return null;
+
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return null;
+
+        const preferred = voices.find(v =>
+            v.lang?.toLowerCase().startsWith('en-gb') &&
+            /female|susan|libby|sophie|kate|zira|hazel|serena/i.test(v.name)
+        );
+
+        if (preferred) return preferred;
+        const fallbackUk = voices.find(v => v.lang?.toLowerCase().startsWith('en-gb'));
+        return fallbackUk || voices.find(v => v.lang?.toLowerCase().startsWith('en')) || voices[0];
+    }, []);
+
+    const speakAssistant = useCallback((text) => {
+        if (!('speechSynthesis' in window)) return;
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voice = getPreferredUkFemaleVoice();
+
+        if (voice) utterance.voice = voice;
+        utterance.lang = (voice && voice.lang) || 'en-GB';
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+
+        window.speechSynthesis.speak(utterance);
+    }, [getPreferredUkFemaleVoice]);
+
+    const handleVoiceCommand = useCallback((rawCommand) => {
+        const command = (rawCommand || '').toLowerCase().trim();
+        if (!command) return;
+
+        const hasAssistantWakeWord = command.includes('neurocare') || command.includes('medic');
+        if (!hasAssistantWakeWord && !assistantEnabled) {
+            setAssistantStatus('Waiting for wake word');
+            return;
+        }
+
+        if (command.includes('help')) {
+            const help = 'Try: NeuroCare analyze scan, open vault, save report, export report, or stop listening.';
+            speakAssistant(help);
+            setAssistantStatus('Help delivered');
+            showToast(help, { type: 'info' });
+            return;
+        }
+
+        if (command.includes('open vault') || command.includes('open history') || command.includes('show sessions')) {
+            setIsHistoryOpen(true);
+            const msg = 'Opening session vault.';
+            speakAssistant(msg);
+            setAssistantStatus('Opening vault');
+            return;
+        }
+
+        if (command.includes('analyze') || command.includes('run analysis') || command.includes('scan now')) {
+            if (!selectedFile) {
+                const msg = 'Please upload a scan before analysis.';
+                speakAssistant(msg);
+                setAssistantStatus('No scan uploaded');
+                showToast(msg, { type: 'error' });
+                return;
+            }
+
+            if (!loading) {
+                handleAnalyzeRef.current && handleAnalyzeRef.current();
+                const msg = 'Initiating neural diagnostic protocol.';
+                speakAssistant(msg);
+                setAssistantStatus('Analysis started');
+            }
+            return;
+        }
+
+        if (command.includes('save report') || command.includes('archive report')) {
+            if (!analysis) {
+                const msg = 'No completed report available to save yet.';
+                speakAssistant(msg);
+                setAssistantStatus('No report to save');
+                return;
+            }
+
+            handleSaveReport();
+            speakAssistant('Report archived to vault.');
+            setAssistantStatus('Report saved');
+            return;
+        }
+
+        if (command.includes('export') || command.includes('download report')) {
+            if (!analysis) {
+                const msg = 'No completed report available to export yet.';
+                speakAssistant(msg);
+                setAssistantStatus('No report to export');
+                return;
+            }
+
+            handleExport();
+            speakAssistant('Preparing clinical export bundle.');
+            setAssistantStatus('Export started');
+            return;
+        }
+
+        if (command.includes('stop listening') || command.includes('mute assistant') || command.includes('disable assistant')) {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+            setAssistantEnabled(false);
+            setAssistantListening(false);
+            setAssistantStatus('Disabled');
+            speakAssistant('Voice assistant disabled.');
+            return;
+        }
+
+        const fallback = 'Command not recognized. Say NeuroCare help for command list.';
+        speakAssistant(fallback);
+        setAssistantStatus('Unknown command');
+        showToast(fallback, { type: 'info' });
+    }, [assistantEnabled, analysis, loading, selectedFile, showToast, speakAssistant]);
 
     // Load sessions from localStorage
     useEffect(() => {
@@ -248,6 +374,83 @@ export default function NeuroDashboard() {
             setSessions(JSON.parse(saved));
         }
     }, []);
+
+    useEffect(() => {
+        if (!('speechSynthesis' in window)) return;
+        const loadVoices = () => window.speechSynthesis.getVoices();
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+
+        return () => {
+            window.speechSynthesis.onvoiceschanged = null;
+            window.speechSynthesis.cancel();
+        };
+    }, []);
+
+    useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return;
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-GB';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+            setAssistantListening(true);
+            setAssistantStatus('Listening');
+        };
+
+        recognition.onend = () => {
+            setAssistantListening(false);
+            if (assistantEnabled) {
+                try {
+                    recognition.start();
+                } catch {
+                    setAssistantStatus('Restarting');
+                }
+            }
+        };
+
+        recognition.onerror = () => {
+            setAssistantStatus('Voice error');
+        };
+
+        recognition.onresult = (event) => {
+            const result = event.results[event.results.length - 1];
+            const transcript = result[0].transcript.trim();
+            setAssistantTranscript(transcript);
+
+            if (result.isFinal) {
+                handleVoiceCommand(transcript);
+            }
+        };
+
+        recognitionRef.current = recognition;
+
+        return () => {
+            recognitionRef.current = null;
+            recognition.stop();
+        };
+    }, [assistantEnabled, handleVoiceCommand]);
+
+    useEffect(() => {
+        const recognition = recognitionRef.current;
+        if (!recognition) return;
+
+        if (assistantEnabled) {
+            try {
+                recognition.start();
+            } catch {
+                setAssistantStatus('Already listening');
+            }
+            speakAssistant('NeuroCare assistant online. Awaiting your command, doctor.');
+        } else {
+            recognition.stop();
+            setAssistantListening(false);
+            setAssistantStatus('Idle');
+        }
+    }, [assistantEnabled, speakAssistant]);
 
     function normalizeBodyPartName(raw) {
         if (!raw) return null;
@@ -265,6 +468,25 @@ export default function NeuroDashboard() {
         if (l.includes('whole brain') || l.includes('global') || l.includes('normal')) return 'Whole Brain';
         // fallback: return original string so UI can display it (no region highlight if unknown)
         return raw;
+    }
+
+    function inferRegionFromFocus(tumorFocus, diagnosis) {
+        if (!tumorFocus?.present) return null;
+        const dx = String(diagnosis || '').toLowerCase();
+
+        // Pituitary lesions are anatomically sellar/brain-stem-proximal in this viewer mapping.
+        if (dx.includes('pituitary')) return 'Brain Stem';
+
+        const nx = Number(tumorFocus?.centroid_norm?.x);
+        const ny = Number(tumorFocus?.centroid_norm?.y);
+        if (!Number.isFinite(nx) || !Number.isFinite(ny)) return null;
+
+        // Coarse lobe inference from 2D MRI centroid.
+        if (ny < 0.28) return 'Frontal Lobe';
+        if (ny > 0.82) return 'Cerebellum';
+        if (ny > 0.68) return 'Occipital Lobe';
+        if (ny > 0.48) return 'Parietal Lobe';
+        return 'Temporal Lobe';
     }
 
     const analysisSteps = [
@@ -370,6 +592,31 @@ export default function NeuroDashboard() {
                 // Map backend result -> UI analysis shape
                 const probs = serverResult.probabilities || {};
                 const suspects = Object.entries(probs).map(([name, p]) => ({ name, probability: p, color: p > 0.9 ? 'rose' : p > 0.8 ? 'orange' : 'emerald' }));
+                const recommendations = Array.isArray(serverResult.recommendations) ? serverResult.recommendations : [];
+                const mappedSolutions = recommendations.map((item, idx) => ({
+                    title: `Intervention ${idx + 1}`,
+                    desc: item,
+                    type: serverResult.severity === 'high' ? 'critical' : 'standard'
+                }));
+
+                const synthesisText =
+                    (typeof serverResult.clinical_summary === 'string' && serverResult.clinical_summary.trim()) ||
+                    (typeof serverResult.description === 'string' && serverResult.description.trim()) ||
+                    'Clinical synthesis unavailable for this result. Please review diagnostic probabilities and recommendations.';
+
+                const topBiomarkers = Object.entries(probs)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([name, p]) => `${name} ${(Number(p) * 100).toFixed(1)}%`);
+
+                const inferredRegion = inferRegionFromFocus(serverResult.tumor_focus, serverResult.diagnosis);
+
+                const imgW = Number(serverResult?.tumor_focus?.image_size?.width || 0);
+                const imgH = Number(serverResult?.tumor_focus?.image_size?.height || 0);
+                const boxW = Number(serverResult?.tumor_focus?.bbox_px?.width || 0);
+                const boxH = Number(serverResult?.tumor_focus?.bbox_px?.height || 0);
+                const areaPct = (imgW > 0 && imgH > 0) ? ((boxW * boxH) / (imgW * imgH)) * 100 : null;
+                const focusVolume = areaPct !== null ? `${areaPct.toFixed(2)}% slice area` : 'N/A';
 
                 const data = {
                     id: Date.now(),
@@ -377,15 +624,16 @@ export default function NeuroDashboard() {
                     diagnosis: serverResult.diagnosis || 'Unknown',
                     display_name: serverResult.disease_display_name || serverResult.design_label || serverResult.diagnosis || 'Unknown',
                     severity: serverResult.severity || (serverResult.region_analysis && serverResult.region_analysis.severity) || 'low',
-                    brain_region: normalizeBodyPartName(serverResult.body_part || serverResult.diagnosis_area || 'Whole Brain'),
+                    brain_region: normalizeBodyPartName(serverResult.body_part || serverResult.diagnosis_area || inferredRegion || 'Whole Brain'),
                     confidence: serverResult.confidence || 0,
-                    volume: serverResult.volume || 'N/A',
+                    volume: serverResult.volume || focusVolume,
                     suspects,
-                    solutions: serverResult.solutions || [],
-                    probable_causes: serverResult.findings || [],
-                    biomarkers: serverResult.findings || [],
+                    solutions: mappedSolutions,
+                    probable_causes: synthesisText,
+                    biomarkers: topBiomarkers,
+                    tumor_focus: serverResult.tumor_focus || { present: false },
                     voxel_count: 'N/A',
-                    relative_growth: serverResult.relative_growth || 'N/A'
+                    relative_growth: serverResult.relative_growth || (areaPct !== null ? 'from current MRI focus' : 'N/A')
                 };
 
                 setAnalysis(data);
@@ -403,6 +651,10 @@ export default function NeuroDashboard() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        handleAnalyzeRef.current = handleAnalyze;
+    }, [handleAnalyze]);
 
     const handleSaveReport = () => {
         if (!analysis) return;
@@ -473,6 +725,27 @@ export default function NeuroDashboard() {
                             <Download size={16} /> Clinical Export
                         </Button>
                     </div>
+                </div>
+
+                <div className="fixed bottom-6 right-6 z-[120] flex flex-col items-end gap-3">
+                    <div className="max-w-[300px] rounded-2xl border border-zinc-200 bg-white/95 backdrop-blur px-4 py-3 shadow-lg">
+                        <p className="text-[10px] font-bold font-sora uppercase tracking-[0.2em] text-zinc-500">NeuroCare Assistant</p>
+                        <p className="text-xs font-semibold text-slate-700 mt-1">{assistantStatus}</p>
+                        <p className="text-[11px] text-zinc-500 mt-1 truncate">{assistantTranscript || 'Say: "NeuroCare help"'}</p>
+                    </div>
+
+                    <Button
+                        onClick={() => setAssistantEnabled(prev => !prev)}
+                        className={cn(
+                            'h-14 w-14 rounded-full border shadow-xl flex items-center justify-center',
+                            assistantEnabled
+                                ? 'bg-teal-600 hover:bg-teal-700 text-white border-teal-500'
+                                : 'bg-slate-900 hover:bg-slate-800 text-white border-slate-800'
+                        )}
+                        title={assistantEnabled ? 'Disable NeuroCare Assistant' : 'Enable NeuroCare Assistant'}
+                    >
+                        <BrainCircuit size={22} className={assistantListening ? 'animate-pulse' : ''} />
+                    </Button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[520px] lg:min-h-[750px] items-stretch">
@@ -566,29 +839,7 @@ export default function NeuroDashboard() {
                             {/* HUD Overlays (header removed) */}
                             <div className="absolute top-8 left-8 z-30 flex flex-col gap-4 pointer-events-none">
 
-                                {analysis && analysis.diagnosis !== 'no_tumor' && (severity === 'high' || severity === 'medium') && (
-                                    <motion.div
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        className="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-red-100 space-y-3 max-w-[220px] shadow-sm pointer-events-auto"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                                            <span className="text-[10px] font-bold font-sora text-red-600 uppercase tracking-widest">Pathology Detected</span>
-                                        </div>
-                                        <p className="text-lg font-bold font-sora text-slate-900 leading-tight uppercase tracking-tight">{analysis.brain_region}</p>
-                                        <div className="flex justify-between items-end pt-1">
-                                            <div className="space-y-0.5">
-                                                <p className="text-[8px] text-zinc-400 font-bold uppercase">Volume</p>
-                                                <p className="text-[11px] font-bold text-slate-700">{analysis.volume}</p>
-                                            </div>
-                                            <div className="space-y-0.5 text-right">
-                                                <p className="text-[8px] text-zinc-400 font-bold uppercase">Delta</p>
-                                                <p className="text-[11px] font-bold text-emerald-600">{analysis.relative_growth}</p>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                )}
+
                             </div>
 
                             {/* GPU Engine (Three.js) */}
@@ -610,6 +861,7 @@ export default function NeuroDashboard() {
                                     diagnosisArea={analysis?.diagnosis}
                                     bodyPart={analysis?.diagnosis === 'no_tumor' || severity === 'normal' ? null : analysis?.brain_region}
                                     severity={analysis?.diagnosis === 'no_tumor' ? 'normal' : severity}
+                                    tumorFocus={analysis?.tumor_focus}
                                 />
                             </div>
 
@@ -681,19 +933,25 @@ export default function NeuroDashboard() {
                                             <ShieldCheck size={14} className="text-teal-600" />
                                         </div>
                                         <div className="space-y-3">
-                                            {analysis.solutions.map((sol, i) => (
-                                                <div key={i} className="p-3 rounded-xl bg-zinc-50 border border-zinc-100 flex gap-3">
-                                                    <div className={cn(
-                                                        "w-1 h-full rounded-full shrink-0",
-                                                        sol.type === 'critical' ? "bg-red-500" :
-                                                            sol.type === 'standard' ? "bg-teal-500" : "bg-blue-500"
-                                                    )} />
-                                                    <div>
-                                                        <h4 className="text-[11px] font-bold font-sora text-slate-800 uppercase tracking-tight">{sol.title}</h4>
-                                                        <p className="text-[10px] text-zinc-500 leading-tight mt-1">{sol.desc}</p>
+                                            {analysis.solutions?.length > 0 ? (
+                                                analysis.solutions.map((sol, i) => (
+                                                    <div key={i} className="p-3 rounded-xl bg-zinc-50 border border-zinc-100 flex gap-3">
+                                                        <div className={cn(
+                                                            "w-1 h-full rounded-full shrink-0",
+                                                            sol.type === 'critical' ? "bg-red-500" :
+                                                                sol.type === 'standard' ? "bg-teal-500" : "bg-blue-500"
+                                                        )} />
+                                                        <div>
+                                                            <h4 className="text-[11px] font-bold font-sora text-slate-800 uppercase tracking-tight">{sol.title}</h4>
+                                                            <p className="text-[10px] text-zinc-500 leading-tight mt-1">{sol.desc}</p>
+                                                        </div>
                                                     </div>
+                                                ))
+                                            ) : (
+                                                <div className="p-3 rounded-xl bg-zinc-50 border border-zinc-100">
+                                                    <p className="text-[11px] text-zinc-500">No interventions returned by backend. Review diagnosis details and run analysis again.</p>
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
                                     </div>
 
@@ -704,8 +962,8 @@ export default function NeuroDashboard() {
                                             <Info size={14} className="text-zinc-300" />
                                         </div>
                                         <div className="flex-1 bg-zinc-50/50 rounded-xl p-5 border border-zinc-100 overflow-y-auto">
-                                            <p className="text-[13px] text-slate-600 leading-relaxed font-medium italic">
-                                                "{analysis.probable_causes}"
+                                            <p className="text-[13px] text-slate-600 leading-relaxed font-medium whitespace-pre-line">
+                                                {analysis.probable_causes || 'Clinical synthesis unavailable.'}
                                             </p>
                                         </div>
                                         <div className="mt-5 flex items-center gap-3">

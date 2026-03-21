@@ -199,6 +199,60 @@ Always consult with qualified healthcare professionals for final diagnosis and t
     return summary
 
 
+def detect_tumor_focus(image: Image.Image, diagnosis: str, confidence: float) -> Dict[str, Any]:
+    """
+    Estimate a tumor focus from a single 2D MRI image.
+
+    This is a lightweight image-space locator (centroid + bbox) used to drive
+    a specific marker in the 3D viewer. For "No Tumor" predictions, returns
+    no focus.
+    """
+    if diagnosis == 'No Tumor':
+        return {'present': False}
+
+    arr = np.array(image.convert('L'), dtype=np.float32)
+    if arr.size == 0:
+        return {'present': False}
+
+    # Robust high-intensity threshold to isolate suspicious region candidates.
+    p90 = np.percentile(arr, 90)
+    p98 = np.percentile(arr, 98)
+    threshold = (p90 + p98) * 0.5
+    mask = arr >= threshold
+
+    ys, xs = np.where(mask)
+    if len(xs) < 20:
+        # Fallback to global bright centroid when mask is sparse.
+        flat_idx = np.argpartition(arr.ravel(), -max(50, int(arr.size * 0.002)))[-max(50, int(arr.size * 0.002)):]
+        ys, xs = np.unravel_index(flat_idx, arr.shape)
+
+    if len(xs) == 0:
+        return {'present': False}
+
+    x_min, x_max = int(xs.min()), int(xs.max())
+    y_min, y_max = int(ys.min()), int(ys.max())
+    x_center = float(xs.mean())
+    y_center = float(ys.mean())
+
+    h, w = arr.shape
+    x_norm = float(np.clip(x_center / max(1, w - 1), 0.0, 1.0))
+    y_norm = float(np.clip(y_center / max(1, h - 1), 0.0, 1.0))
+
+    return {
+        'present': True,
+        'image_size': {'width': int(w), 'height': int(h)},
+        'centroid_px': {'x': round(x_center, 1), 'y': round(y_center, 1)},
+        'centroid_norm': {'x': round(x_norm, 4), 'y': round(y_norm, 4)},
+        'bbox_px': {
+            'x': x_min,
+            'y': y_min,
+            'width': int(max(1, x_max - x_min)),
+            'height': int(max(1, y_max - y_min))
+        },
+        'confidence': round(float(confidence), 4)
+    }
+
+
 @app.route('/process-image', methods=['POST'])
 def process_image():
     """
@@ -260,6 +314,9 @@ def process_image():
         
         # Generate clinical summary
         clinical_summary = generate_clinical_summary(diagnosis, confidence, probabilities)
+
+        # Estimate tumor focus to drive specific 3D marker placement.
+        tumor_focus = detect_tumor_focus(image, diagnosis, confidence)
         
         # Determine if this is a critical alert (any tumor detected)
         is_critical = diagnosis != 'No Tumor'
@@ -275,6 +332,7 @@ def process_image():
                 'description': disease_info.get('description', ''),
                 'recommendations': disease_info.get('recommendations', []),
                 'clinical_summary': clinical_summary,
+                'tumor_focus': tumor_focus,
                 'critical_alert': is_critical,
                 'image_shape': [image.size[0], image.size[1]],
                 'model_type': 'BrainTumorCNN',

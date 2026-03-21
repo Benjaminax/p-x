@@ -140,15 +140,6 @@ export declare const MedicalScanSchema: MongooseSchema<MedicalScan, import("mong
     }, "id"> & {
         id: string;
     }> | undefined;
-    findings?: import("mongoose").SchemaDefinitionProperty<Finding[] | undefined, MedicalScan, Document<unknown, {}, MedicalScan, {
-        id: string;
-    }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<MedicalScan & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v: number;
-    }, "id"> & {
-        id: string;
-    }> | undefined;
     orderingDoctorId?: import("mongoose").SchemaDefinitionProperty<MongooseSchema.Types.ObjectId | undefined, MedicalScan, Document<unknown, {}, MedicalScan, {
         id: string;
     }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<MedicalScan & Required<{
@@ -231,6 +222,15 @@ export declare const MedicalScanSchema: MongooseSchema<MedicalScan, import("mong
         id: string;
     }> | undefined;
     radiologistReport?: import("mongoose").SchemaDefinitionProperty<string | undefined, MedicalScan, Document<unknown, {}, MedicalScan, {
+        id: string;
+    }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<MedicalScan & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    findings?: import("mongoose").SchemaDefinitionProperty<Finding[] | undefined, MedicalScan, Document<unknown, {}, MedicalScan, {
         id: string;
     }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<MedicalScan & Required<{
         _id: import("mongoose").Types.ObjectId;

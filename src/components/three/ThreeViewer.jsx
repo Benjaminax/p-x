@@ -426,13 +426,39 @@ function NeuralLinks({ obj, playing, thinking }) {
     )
 }
 
-function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray, thinking, burbleUp, severity = 'normal' }) {
+function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray, thinking, burbleUp, severity = 'normal', tumorFocus }) {
     const pointsRef = useRef()
     const shaderRef = useRef()
     const highlightRef = useRef()
     const highlightShaderRef = useRef()
     const [geometry, setGeometry] = useState(null)
     const [highlightGeometry, setHighlightGeometry] = useState(null)
+
+    const regionZones = useMemo(() => ({
+        'Frontal Lobe': { x: [20, 150], y: [-150, 150], z: [0, 150] },
+        'Parietal Lobe': { x: [-150, 20], y: [20, 150], z: [-50, 50] },
+        'Temporal Lobe': { x: [-100, 100], y: [-150, 0], z: [-50, 50] },
+        'Occipital Lobe': { x: [-150, -20], y: [-100, 100], z: [-150, 50] },
+        'Cerebellum': { x: [-100, 100], y: [-150, -50], z: [-100, -20] },
+        'Brain Stem': { x: [-20, 20], y: [-200, -100], z: [-20, 20] },
+        'Left Parahippocampal Gyrus': { x: [-80, -20], y: [-100, -40], z: [-40, 40] },
+        'Right Parahippocampal Gyrus': { x: [20, 80], y: [-100, -40], z: [-40, 40] },
+        'Middle Cerebral Artery': { x: [-60, 60], y: [-20, 40], z: [-20, 20] },
+        'Sagittal Sinus': { x: [-10, 10], y: [100, 150], z: [-100, 100] }
+    }), [])
+
+    const tumorMarkerPosition = useMemo(() => {
+        if (!tumorFocus || !tumorFocus.present || !bodyPart || !regionZones[bodyPart]) return null
+        const zone = regionZones[bodyPart]
+        const nx = Number(tumorFocus?.centroid_norm?.x)
+        const ny = Number(tumorFocus?.centroid_norm?.y)
+        if (!Number.isFinite(nx) || !Number.isFinite(ny)) return null
+
+        const x = zone.x[0] + nx * (zone.x[1] - zone.x[0])
+        const y = zone.y[1] - ny * (zone.y[1] - zone.y[0])
+        const z = zone.z[0] + 0.6 * (zone.z[1] - zone.z[0])
+        return [x, y, z]
+    }, [tumorFocus, bodyPart, regionZones])
 
     const uniforms = useMemo(() => ({
         uTime: { value: 0 },
@@ -496,14 +522,6 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
         // Build a separate geometry that contains ONLY the points inside the requested bodyPart zone
         // Only create highlight geometry when severity is medium/high AND diagnosis is not 'no_tumor'
         if (bodyPart && severityIsSignificant && !isNoTumor) {
-            const regionZones = {
-                'Frontal Lobe': { x: [20, 150], y: [-150, 150], z: [0, 150] },
-                'Parietal Lobe': { x: [-150, 20], y: [20, 150], z: [-50, 50] },
-                'Temporal Lobe': { x: [-100, 100], y: [-150, 0], z: [-50, 50] },
-                'Occipital Lobe': { x: [-150, -20], y: [-100, 100], z: [-150, 50] },
-                'Cerebellum': { x: [-100, 100], y: [-150, -50], z: [-100, -20] },
-                'Brain Stem': { x: [-20, 20], y: [-200, -100], z: [-20, 20] }
-            }
             const zone = regionZones[bodyPart]
             if (zone) {
                 const highlightPos = []
@@ -539,20 +557,6 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
         if (!geometry) return
         const positions = geometry.attributes.position.array
         const colorArray = geometry.attributes.color.array
-        const regionZones = {
-            'Frontal Lobe': { x: [20, 150], y: [-150, 150], z: [0, 150] },
-            'Parietal Lobe': { x: [-150, 20], y: [20, 150], z: [-50, 50] },
-            'Temporal Lobe': { x: [-100, 100], y: [-150, 0], z: [-50, 50] },
-            'Occipital Lobe': { x: [-150, -20], y: [-100, 100], z: [-150, 50] },
-            'Cerebellum': { x: [-100, 100], y: [-150, -50], z: [-100, -20] },
-            'Brain Stem': { x: [-20, 20], y: [-200, -100], z: [-20, 20] },
-            // Clinical synonyms mapping
-            'Left Parahippocampal Gyrus': { x: [-80, -20], y: [-100, -40], z: [-40, 40] },
-            'Right Parahippocampal Gyrus': { x: [20, 80], y: [-100, -40], z: [-40, 40] },
-            'Middle Cerebral Artery': { x: [-60, 60], y: [-20, 40], z: [-20, 20] },
-            'Sagittal Sinus': { x: [-10, 10], y: [100, 150], z: [-100, 100] }
-        }
-
         // If diagnosis explicitly indicates no tumor, force normal coloring and skip highlights
         const isNoTumor = diagnosisArea && (String(diagnosisArea).toLowerCase().includes('no') || String(diagnosisArea).toLowerCase().includes('normal') || String(diagnosisArea).toLowerCase().includes('no_tumor'))
         if (isNoTumor) {
@@ -596,7 +600,7 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
             }
         }
         geometry.attributes.color.needsUpdate = true
-    }, [geometry, diagnosisArea, bodyPart])
+    }, [geometry, diagnosisArea, bodyPart, regionZones, severity])
 
     useFrame(({ clock }) => {
         if (!pointsRef.current) return
@@ -642,7 +646,7 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
                         args={[BrainShader]}
                         uniforms={{
                             uTime: { value: 0 },
-                            uColor: { value: new THREE.Color(severity === 'high' ? '#ef4444' : severity === 'medium' ? '#fb923c' : '#f59e0b') },
+                            uColor: { value: new THREE.Color('#ef4444') },
                             uPointSize: { value: pointSize * (severity === 'high' ? 2.6 : 2.0) },
                             uOpacity: { value: severity === 'high' ? 1.0 : 0.95 },
                             uNoiseFreq: { value: 0.0 },
@@ -656,6 +660,24 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
                         blending={THREE.AdditiveBlending}
                     />
                 </points>
+            )}
+
+            {/* Specific tumor marker derived from MRI centroid in selected region */}
+            {tumorMarkerPosition && (
+                <group position={tumorMarkerPosition}>
+                    <mesh>
+                        <sphereGeometry args={[4.5, 16, 16]} />
+                        <meshBasicMaterial
+                            color={'#ef4444'}
+                            transparent
+                            opacity={0.95}
+                        />
+                    </mesh>
+                    <mesh>
+                        <ringGeometry args={[6.5, 8.2, 24]} />
+                        <meshBasicMaterial color={'#ef4444'} transparent opacity={0.55} side={THREE.DoubleSide} />
+                    </mesh>
+                </group>
             )}
         </>
     )
@@ -678,7 +700,7 @@ function Loader() {
     )
 }
 
-export default function ThreeViewer({ diagnosisArea, bodyPart, severity = 'normal', showControls = true }) {
+export default function ThreeViewer({ diagnosisArea, bodyPart, severity = 'normal', tumorFocus, showControls = true }) {
     const obj = useLoader(OBJLoader, "/static/models/brain-parts-big.obj")
     const [playing, setPlaying] = useState(true)
     const [pointSize, setPointSize] = useState(1.7)
@@ -730,6 +752,8 @@ export default function ThreeViewer({ diagnosisArea, bodyPart, severity = 'norma
                             xray={showXray}
                             thinking={thinking}
                             burbleUp={burbleUp}
+                            severity={severity}
+                            tumorFocus={tumorFocus}
                         />
                         <NeuralLinks obj={obj} playing={playing} thinking={thinking} />
                         <NeuralFilaments />
