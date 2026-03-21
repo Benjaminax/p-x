@@ -17,6 +17,7 @@ import PageHeader from '../../../components/ui/PageHeader';
 import GlassCard from '../../../components/ui/GlassCard';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
+import { cn } from '../../../lib/utils';
 
 export default function VitalDetailsPage() {
   const { search } = useLocation();
@@ -238,6 +239,3 @@ export default function VitalDetailsPage() {
     </motion.div>
   );
 }
-
-const cn = (...classes) => classes.filter(Boolean).join(' ');
-

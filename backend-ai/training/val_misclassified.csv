@@ -1,0 +1,43 @@
+file,true,pred,prob
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (726).jpg","pituitary_tumor","meningioma_tumor",0.506397
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\p (343).jpg","meningioma_tumor","pituitary_tumor",0.926308
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (76).jpg","meningioma_tumor","glioma_tumor",0.835831
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\m1(43).jpg","pituitary_tumor","meningioma_tumor",0.654674
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\gg (486).jpg","meningioma_tumor","glioma_tumor",0.692660
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (124).jpg","meningioma_tumor","glioma_tumor",0.577562
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (103).jpg","meningioma_tumor","pituitary_tumor",0.554786
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(92).jpg","meningioma_tumor","no_tumor",0.952364
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\glioma_tumor\gg (422).jpg","glioma_tumor","meningioma_tumor",0.952269
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(45).jpg","meningioma_tumor","pituitary_tumor",0.734133
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (20).jpg","meningioma_tumor","glioma_tumor",0.553133
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (232).jpg","meningioma_tumor","glioma_tumor",0.843241
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (24).jpg","meningioma_tumor","glioma_tumor",0.607147
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (345).jpg","pituitary_tumor","meningioma_tumor",0.669442
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\glioma_tumor\m3 (128).jpg","glioma_tumor","pituitary_tumor",0.404500
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (569).jpg","pituitary_tumor","meningioma_tumor",0.733639
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m2 (107).jpg","meningioma_tumor","glioma_tumor",0.435929
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(12).jpg","meningioma_tumor","no_tumor",0.470865
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (20).jpg","pituitary_tumor","meningioma_tumor",0.681730
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (45).jpg","meningioma_tumor","pituitary_tumor",0.906978
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m2 (83).jpg","meningioma_tumor","no_tumor",0.609147
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (17).jpg","meningioma_tumor","pituitary_tumor",0.757606
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(143).jpg","meningioma_tumor","no_tumor",0.853377
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (62).jpg","meningioma_tumor","glioma_tumor",0.612060
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (661).jpg","pituitary_tumor","meningioma_tumor",0.987781
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(110).jpg","meningioma_tumor","no_tumor",0.877350
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (130).jpg","pituitary_tumor","meningioma_tumor",0.389099
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\no_tumor\image(130).jpg","no_tumor","pituitary_tumor",0.919110
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (163).jpg","meningioma_tumor","glioma_tumor",0.846432
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (47).jpg","meningioma_tumor","no_tumor",0.532727
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\pituitary_tumor\p (178).jpg","pituitary_tumor","glioma_tumor",0.811410
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m2 (164).jpg","meningioma_tumor","glioma_tumor",0.809052
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\gg (698).jpg","meningioma_tumor","glioma_tumor",0.983862
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\no_tumor\image(114).jpg","no_tumor","pituitary_tumor",0.857139
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m (19).jpg","meningioma_tumor","pituitary_tumor",0.589049
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\glioma_tumor\gg (581).jpg","glioma_tumor","pituitary_tumor",0.525365
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (176).jpg","meningioma_tumor","glioma_tumor",0.706352
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (145).jpg","meningioma_tumor","no_tumor",0.685413
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m3 (50).jpg","meningioma_tumor","glioma_tumor",0.661854
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\glioma_tumor\gg (3).jpg","glioma_tumor","no_tumor",0.565109
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m2 (131).jpg","meningioma_tumor","pituitary_tumor",0.654864
+"C:\Users\kojob\Documents\GitHub\p-x-1\DESIGN\Training\meningioma_tumor\m1(163).jpg","meningioma_tumor","no_tumor",0.446422

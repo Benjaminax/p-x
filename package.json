@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "train:ai": "python backend-ai/training/train.py --data-dir DESIGN/Training",
+    "eval:ai": "python backend-ai/training/evaluate.py --data-dir DESIGN/Training",
+    "backend:start": "python backend-ai/server.py",
+    "backend:health": "curl http://localhost:5000/health || echo '{ \"status\": \"unknown\" }'"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

@@ -7,6 +7,9 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { MedicalRecordsModule } from './medical-records/medical-records.module';
+import { MessagingModule } from './messaging/messaging.module';
+import { PatientsModule } from './patients/patients.module';
 
 @Module({
   imports: [
@@ -20,6 +23,10 @@ import { UsersModule } from './users/users.module';
         PORT: Joi.number().default(3001),
         MONGODB_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION: Joi.string().default('15m'),
+        JWT_REFRESH_SECRET: Joi.string().required(),
+        JWT_REFRESH_EXPIRATION: Joi.string().default('7d'),
+        ALLOWED_ORIGINS: Joi.string().optional(),
       }),
     }),
     MongooseModule.forRootAsync({
@@ -31,6 +38,9 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    MedicalRecordsModule,
+    MessagingModule,
+    PatientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

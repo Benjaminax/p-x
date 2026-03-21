@@ -1,0 +1,40 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MedicalRecordsModule = void 0;
+const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const medical_records_controller_1 = require("./medical-records.controller");
+const medical_records_service_1 = require("./medical-records.service");
+const medical_record_schema_1 = require("./schemas/medical-record.schema");
+const prescription_schema_1 = require("./schemas/prescription.schema");
+const vital_signs_schema_1 = require("./schemas/vital-signs.schema");
+const appointment_schema_1 = require("./schemas/appointment.schema");
+const medical_scan_schema_1 = require("./schemas/medical-scan.schema");
+const auth_module_1 = require("../auth/auth.module");
+let MedicalRecordsModule = class MedicalRecordsModule {
+};
+exports.MedicalRecordsModule = MedicalRecordsModule;
+exports.MedicalRecordsModule = MedicalRecordsModule = __decorate([
+    (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: medical_record_schema_1.MedicalRecord.name, schema: medical_record_schema_1.MedicalRecordSchema },
+                { name: prescription_schema_1.Prescription.name, schema: prescription_schema_1.PrescriptionSchema },
+                { name: vital_signs_schema_1.VitalSigns.name, schema: vital_signs_schema_1.VitalSignsSchema },
+                { name: appointment_schema_1.Appointment.name, schema: appointment_schema_1.AppointmentSchema },
+                { name: medical_scan_schema_1.MedicalScan.name, schema: medical_scan_schema_1.MedicalScanSchema },
+            ]),
+            auth_module_1.AuthModule,
+        ],
+        controllers: [medical_records_controller_1.MedicalRecordsController],
+        providers: [medical_records_service_1.MedicalRecordsService],
+        exports: [medical_records_service_1.MedicalRecordsService],
+    })
+], MedicalRecordsModule);
+//# sourceMappingURL=medical-records.module.js.map

@@ -1,0 +1,1618 @@
+{
+  "model": "C:\\Users\\kojob\\Documents\\GitHub\\p-x-1\\models\\multi_disease_from_design.pth",
+  "data_dir": "C:\\Users\\kojob\\Documents\\GitHub\\p-x-1\\DESIGN\\Training",
+  "num_samples": 2870,
+  "eval_samples": 430,
+  "accuracy": 0.8976744186046511,
+  "classification_report": {
+    "glioma_tumor": {
+      "precision": 0.864,
+      "recall": 0.9642857142857143,
+      "f1-score": 0.9113924050632911,
+      "support": 112.0
+    },
+    "meningioma_tumor": {
+      "precision": 0.9357798165137615,
+      "recall": 0.7669172932330827,
+      "f1-score": 0.8429752066115702,
+      "support": 133.0
+    },
+    "no_tumor": {
+      "precision": 0.8717948717948718,
+      "recall": 0.9714285714285714,
+      "f1-score": 0.918918918918919,
+      "support": 70.0
+    },
+    "pituitary_tumor": {
+      "precision": 0.9152542372881356,
+      "recall": 0.9391304347826087,
+      "f1-score": 0.927038626609442,
+      "support": 115.0
+    },
+    "accuracy": 0.8976744186046511,
+    "macro avg": {
+      "precision": 0.8967072313991922,
+      "recall": 0.9104405034324943,
+      "f1-score": 0.9000812893008056,
+      "support": 430.0
+    },
+    "weighted avg": {
+      "precision": 0.9011781253723417,
+      "recall": 0.8976744186046511,
+      "f1-score": 0.8956405075135757,
+      "support": 430.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      108,
+      1,
+      1,
+      2
+    ],
+    [
+      16,
+      102,
+      9,
+      6
+    ],
+    [
+      0,
+      0,
+      68,
+      2
+    ],
+    [
+      1,
+      6,
+      0,
+      108
+    ]
+  ],
+  "class_to_idx": {
+    "glioma_tumor": 0,
+    "meningioma_tumor": 1,
+    "no_tumor": 2,
+    "pituitary_tumor": 3
+  },
+  "critical_alerts": [
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (712).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8204741477966309
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (250).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.991803765296936
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (91).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9842770099639893
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (101).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9876729846000671
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (407).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9781539440155029
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (242).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7375771999359131
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (290).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8070005178451538
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (33).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9795489311218262
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (580).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9035803079605103
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\p (343).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8836377263069153
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (339).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9813522696495056
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(141).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9871927499771118
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (410).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9202615022659302
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (535).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7622359395027161
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (176).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.89776611328125
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(157).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9683337807655334
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (359).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9942418932914734
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (31).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9729832410812378
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (604).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8884243965148926
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (76).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6742708683013916
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (73).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8645833730697632
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (399).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9304913878440857
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (735).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9584690928459167
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (357).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9926861524581909
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (433).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9142588973045349
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (118).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9421589374542236
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (90).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9658641219139099
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (375).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9814125299453735
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (79).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9649233222007751
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (330).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7893649339675903
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (3).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.979853630065918
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (585).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9465214610099792
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (98).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8701944351196289
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (72).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8747661709785461
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (667).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9083245396614075
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (592).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9611252546310425
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (675).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8467531204223633
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(109).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9519068598747253
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (200).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9244269728660583
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (334).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8828035593032837
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (709).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9502809643745422
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (69).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9686508178710938
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (416).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8494519591331482
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (244).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8006672263145447
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (220).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9843786358833313
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (30).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9735845327377319
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (152).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8978590965270996
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (702).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9030477404594421
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (341).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7072378993034363
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (809).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9364075064659119
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (577).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6501111388206482
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (46).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9795630574226379
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (163).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9389181137084961
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (80).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9933184385299683
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (569).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7601255774497986
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (158).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9316394925117493
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (47).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9684154987335205
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (31).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8745797872543335
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (268).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9127179384231567
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (628).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9326125383377075
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(5).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9992775321006775
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (820).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9540160894393921
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (546).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.659083902835846
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (150).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.893284022808075
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (94).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9187596440315247
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (222).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9750353097915649
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (117).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9704382419586182
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (373).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.935630738735199
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (341).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9315932989120483
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(35).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9043759703636169
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (293).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9443700909614563
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (594).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9557921290397644
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (777).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9506092071533203
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (85).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8805997371673584
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (228).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.945198118686676
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (167).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9717769622802734
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(29).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9516798853874207
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (721).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7598049640655518
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (542).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8823875784873962
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (647).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8560773134231567
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (84).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9571177959442139
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (597).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9205992221832275
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (422).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8456829190254211
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (179).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9738271236419678
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (773).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9655539393424988
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (112).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7177333235740662
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(62).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7519993185997009
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (540).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9373093247413635
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (52).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9347814321517944
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (19).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9869260787963867
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (68).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8918585777282715
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (185).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9922720193862915
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (155).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9554904699325562
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (170).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9320115447044373
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (124).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9458203911781311
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (679).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6273849010467529
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (169).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9560080170631409
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (265).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7849176526069641
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (156).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9717156887054443
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (809).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.859248697757721
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (817).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9336717128753662
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (737).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8753679990768433
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (207).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9939996004104614
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (499).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8992186188697815
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (97).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9403764009475708
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (363).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9573343992233276
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (629).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8596086502075195
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (232).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6569370031356812
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (687).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6851270794868469
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (296).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.783774197101593
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (694).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8114209771156311
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (179).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.963764488697052
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (48).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9496673345565796
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(69).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8668097853660583
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (136).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9961093068122864
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (70).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9867169857025146
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (185).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9010853171348572
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (345).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.6321513056755066
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (32).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9867070913314819
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(162).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8724316954612732
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (153).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9063589572906494
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (582).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9653105139732361
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (350).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9292647838592529
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (209).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9871203303337097
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (541).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9704869985580444
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (99).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9909688830375671
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (571).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9501529932022095
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (807).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9472022652626038
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (586).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9175984263420105
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (703).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9142138957977295
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (107).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9716938734054565
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(144).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9723630547523499
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (338).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.788923442363739
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (80).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9626675248146057
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (504).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9282096028327942
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (78).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.6108555197715759
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (678).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8329645991325378
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (565).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8984300494194031
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (28).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9121798872947693
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (151).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9654288291931152
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (119).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.807807445526123
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (587).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9236679077148438
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (667).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.745941162109375
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (309).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7787293195724487
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (563).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9248597025871277
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (16).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9337840676307678
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (27).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9758248329162598
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (723).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7587136030197144
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (772).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9748432636260986
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (148).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8456200957298279
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (204).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.804794192314148
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (774).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9595659375190735
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (338).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9782829284667969
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (20).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.6278854012489319
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (725).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7726808190345764
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (227).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7390909194946289
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (72).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9820616841316223
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (45).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.776127815246582
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (122).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9853129982948303
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (189).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9431299567222595
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (377).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9880244135856628
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (385).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9464495778083801
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (479).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9657626748085022
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (66).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7626872658729553
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (165).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.949382483959198
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(200).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9982720613479614
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (313).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9706080555915833
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (297).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9801024794578552
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (263).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7644100189208984
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (17).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6511421203613281
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (555).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9275491833686829
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (162).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.951644778251648
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (15).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9872530102729797
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (709).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.711265504360199
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (532).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6039891839027405
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (48).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9104419350624084
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (224).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8889868855476379
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (160).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.6272904872894287
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(168).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9938740134239197
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (661).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9527502655982971
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (824).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9344515204429626
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (28).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8393797278404236
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (477).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9481562972068787
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (164).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9873592257499695
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (126).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9913145899772644
+    },
+    {
+      "file": "DESIGN/Training\\no_tumor\\image(130).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8380231857299805
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (163).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.732459545135498
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (395).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9800629615783691
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (498).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9532039165496826
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(59).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.6189334392547607
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (502).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9322826266288757
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (179).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9681202173233032
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (176).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9865058064460754
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (518).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9195567965507507
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (220).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9393646717071533
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (780).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9857944250106812
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (420).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9287008047103882
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (793).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9511691331863403
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (25).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9177381992340088
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (161).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9441602826118469
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\p (662).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8629655241966248
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (82).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9934499859809875
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (107).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7859453558921814
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (85).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.998030960559845
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (766).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9790946841239929
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (94).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7261081337928772
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (470).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9630988240242004
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (230).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9794296026229858
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (784).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8554496765136719
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (781).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9541193842887878
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (695).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.787479817867279
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (199).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6686290502548218
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (465).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9716088175773621
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (192).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9646613001823425
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (745).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9259461164474487
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (190).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9622195363044739
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (459).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9647366404533386
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (213).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7519103288650513
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (579).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.930535078048706
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (100).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9959474205970764
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (178).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6464423537254333
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (633).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6336256861686707
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (781).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9857944250106812
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (603).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9293556213378906
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (596).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8762307167053223
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (451).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9338304996490479
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (674).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9518150687217712
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (769).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9257824420928955
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (164).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7830076217651367
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (118).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9829508662223816
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (249).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7239392995834351
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (762).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9638671278953552
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (799).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9217036962509155
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (11).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9761201739311218
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\gg (698).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9229205846786499
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (51).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9172738790512085
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (728).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8853743672370911
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (67).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.968498706817627
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (235).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9596441984176636
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (616).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9314694404602051
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (120).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.872472882270813
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (481).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9487259984016418
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(116).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9571673274040222
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(84).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.93951815366745
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(132).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9913133978843689
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(13).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9867157340049744
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (27).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9903466105461121
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (495).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6686922907829285
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (315).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8921269178390503
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (813).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9542062282562256
+    },
+    {
+      "file": "DESIGN/Training\\no_tumor\\image(114).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8002663254737854
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (618).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9552695751190186
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (95).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9448291659355164
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (578).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9704375863075256
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (95).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8464594483375549
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (318).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9081212878227234
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (736).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9663760662078857
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (10).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.938386857509613
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (274).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9656585454940796
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (411).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.7015442848205566
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(177).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8700846433639526
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(153).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9161333441734314
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (144).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9597069025039673
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (657).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9526332020759583
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (275).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9516918659210205
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (78).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9621562361717224
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (7).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7609301805496216
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (176).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.6342009902000427
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (214).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8159041404724121
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (623).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8224366307258606
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (241).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9610224962234497
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (50).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7522876858711243
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (88).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9480724930763245
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (704).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9541848301887512
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (340).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9454059600830078
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (456).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.828370213508606
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (507).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9453595280647278
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(56).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8676631450653076
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (120).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9192276000976562
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (113).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9814496040344238
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (707).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8395582437515259
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (382).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9610852599143982
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (800).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9303683042526245
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (314).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9496101140975952
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m3 (65).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.8931916952133179
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (190).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7102625370025635
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m2 (33).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9869297742843628
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (163).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9649850130081177
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (214).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.6718418598175049
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(54).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9470303058624268
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(124).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9639846682548523
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m1(11).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.9266341924667358
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (632).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8864057660102844
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (775).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.9419025778770447
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (171).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.7968119978904724
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (411).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9791138768196106
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (643).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8936377763748169
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (599).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.8970776200294495
+    },
+    {
+      "file": "DESIGN/Training\\pituitary_tumor\\p (172).jpg",
+      "pred_class": "pituitary_tumor",
+      "probability": 0.924055814743042
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (695).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9759408831596375
+    },
+    {
+      "file": "DESIGN/Training\\meningioma_tumor\\m (194).jpg",
+      "pred_class": "meningioma_tumor",
+      "probability": 0.885547399520874
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (433).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.8886752128601074
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (493).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.7901359796524048
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (282).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9514716863632202
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (726).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9198951721191406
+    },
+    {
+      "file": "DESIGN/Training\\glioma_tumor\\gg (241).jpg",
+      "pred_class": "glioma_tumor",
+      "probability": 0.9709708094596863
+    }
+  ],
+  "num_critical_alerts": 306,
+  "critical_alert_rate": 0.7116279069767442,
+  "critical_threshold": 0.6,
+  "temperature": 0.7109397053718567,
+  "ece_before": 0.06854628636393435,
+  "ece_after": 0.03248733053671066,
+  "nll_before": 0.3216395974159241,
+  "nll_after": 0.2928391098976135
+}

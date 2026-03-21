@@ -20,44 +20,36 @@
     <script>
         const samples = [
             {
-                id: "sample_001",
+                id: "sample_no_tumor",
                 filename: "normal_brain_mri.jpg",
-                title: "Normal Brain MRI",
-                description: "Normal brain MRI scan - no abnormalities detected",
-                condition: "Normal",
-                confidence: 95
+                title: "No Tumor — Normal Brain",
+                description: "Normal brain MRI scan — no tumor detected",
+                condition: "No Tumor",
+                confidence: 98
             },
             {
-                id: "sample_002",
-                filename: "brain_tumor_mri.jpg",
-                title: "Brain Tumor MRI",
-                description: "Brain MRI showing suspected tumor in frontal lobe",
-                condition: "Tumor",
-                confidence: 87
+                id: "sample_glioma",
+                filename: "glioma_brain_mri.jpg",
+                title: "Glioma (Representative)",
+                description: "MRI showing a suspected glioma lesion",
+                condition: "Glioma Tumor",
+                confidence: 86
             },
             {
-                id: "sample_003",
-                filename: "stroke_brain_mri.jpg",
-                title: "Stroke Brain MRI",
-                description: "Brain MRI showing acute ischemic stroke",
-                condition: "Stroke",
-                confidence: 92
+                id: "sample_meningioma",
+                filename: "meningioma_brain_mri.jpg",
+                title: "Meningioma (Representative)",
+                description: "MRI demonstrating a likely meningioma",
+                condition: "Meningioma Tumor",
+                confidence: 84
             },
             {
-                id: "sample_004",
-                filename: "alzheimers_brain_mri.jpg",
-                title: "Alzheimer's Brain MRI",
-                description: "Brain MRI showing signs of Alzheimer's disease",
-                condition: "Alzheimer's Disease",
-                confidence: 78
-            },
-            {
-                id: "sample_005",
-                filename: "multiple_sclerosis_mri.jpg",
-                title: "Multiple Sclerosis MRI",
-                description: "Brain MRI showing multiple sclerosis lesions",
-                condition: "Multiple Sclerosis",
-                confidence: 89
+                id: "sample_pituitary",
+                filename: "pituitary_brain_mri.jpg",
+                title: "Pituitary Tumor (Representative)",
+                description: "MRI focused on the sellar region showing pituitary lesion",
+                condition: "Pituitary Tumor",
+                confidence: 90
             }
         ];
 
@@ -114,82 +106,64 @@
 
         function getSampleResults(sampleId) {
             const results = {
-                "sample_001": {
-                    diagnosis: "Normal brain structure",
-                    confidence: 95,
+                "sample_no_tumor": {
+                    diagnosis: "No Tumor",
+                    confidence: 98,
                     findings: [
-                        "No lesions or abnormalities detected",
-                        "Normal gray matter volume",
-                        "Normal white matter integrity",
-                        "No signs of atrophy"
+                        "No focal lesions detected",
+                        "Normal ventricular size",
+                        "No abnormal enhancement",
+                        "White/gray matter within expected limits"
                     ],
                     recommendations: [
-                        "No immediate action required",
-                        "Regular check-ups recommended",
-                        "Maintain healthy lifestyle"
+                        "Routine follow-up as clinically indicated",
+                        "Maintain healthy lifestyle",
+                        "No immediate intervention required"
                     ]
                 },
-                "sample_002": {
-                    diagnosis: "Suspected meningioma in left frontal lobe",
-                    confidence: 87,
+                "sample_glioma": {
+                    diagnosis: "Glioma Tumor (suspected)",
+                    confidence: 86,
                     findings: [
-                        "Well-defined mass in left frontal lobe",
-                        "Mass measures approximately 2.3 cm x 1.8 cm",
-                        "Mild surrounding edema present",
-                        "No midline shift observed"
+                        "Irregular cortical mass with surrounding edema",
+                        "Heterogeneous T2/FLAIR signal",
+                        "Mild mass effect without midline shift",
+                        "Contrast enhancement suggestive of glioma"
                     ],
                     recommendations: [
-                        "Urgent neurosurgery consultation required",
-                        "MRI with contrast recommended for further evaluation",
-                        "Consider biopsy if surgical resection planned"
+                        "Neurosurgery / neuro-oncology referral",
+                        "MRI with contrast and advanced sequences",
+                        "Consider biopsy or resection depending on clinical context"
                     ]
                 },
-                "sample_003": {
-                    diagnosis: "Acute ischemic stroke in right middle cerebral artery territory",
-                    confidence: 92,
+                "sample_meningioma": {
+                    diagnosis: "Meningioma (likely)",
+                    confidence: 84,
                     findings: [
-                        "Hyperintense signal on DWI in right MCA territory",
-                        "Corresponding hypointense signal on ADC map",
-                        "Involvement of right temporal and parietal lobes",
-                        "No hemorrhagic transformation"
+                        "Well-circumscribed extra-axial mass",
+                        "Dural tail sign on contrast imaging",
+                        "Local mass effect without deep invasion",
+                        "Minimal surrounding edema"
                     ],
                     recommendations: [
-                        "Immediate thrombolytic therapy if within time window",
-                        "Transfer to stroke center",
-                        "Monitor for neurological deterioration",
-                        "Start antiplatelet therapy"
+                        "Neurosurgery referral for evaluation",
+                        "Contrast MRI and surgical planning if indicated",
+                        "Watchful waiting may be appropriate for small, asymptomatic lesions"
                     ]
                 },
-                "sample_004": {
-                    diagnosis: "Early-stage Alzheimer's disease with hippocampal atrophy",
-                    confidence: 78,
+                "sample_pituitary": {
+                    diagnosis: "Pituitary Tumor (suspected)",
+                    confidence: 90,
                     findings: [
-                        "Bilateral hippocampal atrophy",
-                        "Enlarged temporal horns",
-                        "Mild global cortical atrophy",
-                        "Preserved overall brain volume"
+                        "Sellar/suprasellar mass centered on the pituitary",
+                        "Possible optic chiasm effacement if large",
+                        "Hormonal workup recommended",
+                        "Contrast enhancement typical of pituitary lesions"
                     ],
                     recommendations: [
-                        "Neurology consultation for cognitive assessment",
-                        "Consider cholinesterase inhibitors",
-                        "Regular cognitive monitoring",
-                        "Family counseling and support"
-                    ]
-                },
-                "sample_005": {
-                    diagnosis: "Multiple sclerosis with active demyelinating lesions",
-                    confidence: 89,
-                    findings: [
-                        "Multiple hyperintense lesions on T2/FLAIR",
-                        "Periventricular and subcortical distribution",
-                        "Some lesions show gadolinium enhancement",
-                        "Dawson's fingers pattern observed"
-                    ],
-                    recommendations: [
-                        "Disease-modifying therapy initiation",
-                        "Regular MRI monitoring every 6 months",
-                        "Physical therapy evaluation",
-                        "Vitamin D supplementation"
+                        "Endocrinology and neurosurgery consultation",
+                        "Visual field testing if optic apparatus involved",
+                        "Hormonal evaluation and MRI with dynamic contrast"
                     ]
                 }
             };

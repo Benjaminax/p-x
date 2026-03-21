@@ -1,7 +1,21 @@
 version: '3.8'
 
 services:
-  # Primary Database for User, Patient, and Audit Logs
+  # MongoDB for Medical Records System
+  mongodb:
+    image: mongo:6.0
+    container_name: nh_mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-securepassword}
+      MONGO_INITDB_DATABASE: medical-records
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  # PostgreSQL for Legacy/Future Features (Optional)
   postgres:
     image: postgres:16-alpine
     container_name: nh_postgres
@@ -14,7 +28,6 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # Helper to enable pgcrypto extension on init
       - ./infra/init-db:/docker-entrypoint-initdb.d
 
   # Redis for BullMQ (Async Job Queue for AI)
@@ -25,14 +38,92 @@ services:
     ports:
       - "6379:6379"
 
+  # Backend Core (NestJS) - Medical Records API
+  backend-core:
+    build:
+      context: ./backend-core
+      dockerfile: Dockerfile
+    container_name: nh_backend_core
+    restart: always
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+      MONGODB_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-securepassword}@mongodb:27017/medical-records?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      JWT_EXPIRATION: 24h
+      REDIS_URL: redis://redis:6379
+      AI_SERVICE_URL: http://ai-doctor:8001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./backend-core:/app
+      - /app/node_modules
+
+  # AI Doctor Service (Python FastAPI)
+  ai-doctor:
+    build:
+      context: ./backend-ai
+      dockerfile: Dockerfile.ai-doctor
+    container_name: nh_ai_doctor
+    restart: always
+    environment:
+      BACKEND_CORE_URL: http://backend-core:3001
+      AI_MODEL_ENDPOINT: http://brain-scan-ai:8000
+      PORT: 8001
+    ports:
+      - "8001:8001"
+    depends_on:
+      - backend-core
+    volumes:
+      - ./backend-ai:/app
+
+  # Brain Scan AI Service (Python)
+  brain-scan-ai:
+    build:
+      context: ./backend-ai
+      dockerfile: Dockerfile
+    container_name: nh_brain_scan_ai
+    restart: always
+    environment:
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend-ai:/app
+      - ./backend-ai/models:/app/models
+
+  # Frontend (React + Vite)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: nh_frontend
+    restart: always
+    environment:
+      VITE_API_URL: http://localhost:3001
+      VITE_AI_DOCTOR_URL: http://localhost:8001
+      VITE_BRAIN_SCAN_URL: http://localhost:8000
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-core
+      - ai-doctor
+      - brain-scan-ai
+
   # Adminer for easy DB visualization (Optional, Dev only)
   adminer:
     image: adminer
+    container_name: nh_adminer
     restart: always
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+      - mongodb
 
 volumes:
+  mongodb_data:
   postgres_data:

@@ -158,26 +158,6 @@ export default function SummaryReport() {
                             )}
                         </div>
 
-                        <div className="bg-white rounded-xl p-6 flex flex-col justify-center items-center text-center border border-gray-200 shadow-sm">
-                            <span className="text-xs font-bold text-gray-500 uppercase mb-4">AI Confidence Score</span>
-                            <div className="relative w-32 h-32 flex items-center justify-center">
-                                <svg className="w-full h-full transform -rotate-90">
-                                    <circle cx="64" cy="64" r="56" className="stroke-gray-100 fill-none" strokeWidth="12" />
-                                    <circle
-                                        cx="64" cy="64" r="56"
-                                        className="stroke-blue-600 fill-none"
-                                        strokeWidth="12"
-                                        strokeDasharray={351.8}
-                                        strokeDashoffset={351.8 * (1 - reportData.confidence)}
-                                        strokeLinecap="round"
-                                    />
-                                </svg>
-                                <div className="absolute text-center">
-                                    <span className="text-3xl font-bold text-gray-900">{(reportData.confidence * 100).toFixed(0)}</span>
-                                    <span className="text-sm font-medium text-gray-500 block">%</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -212,7 +192,7 @@ export default function SummaryReport() {
                         )}
                     </div>
 
-                    <div className="bg-slate-900 relative min-h-[400px] flex flex-col justify-end overflow-hidden print:min-h-[300px]">
+                    <div className="bg-slate-900 relative min-h-[280px] sm:min-h-[400px] flex flex-col justify-end overflow-hidden print:min-h-[300px]">
                         <div className="absolute top-4 left-4 z-10 text-white/50 text-xs font-mono uppercase tracking-widest border border-white/20 px-2 py-1 rounded">
                             3D Visualization Render
                         </div>
@@ -220,7 +200,9 @@ export default function SummaryReport() {
                         <div className="absolute inset-0">
                             <ThreeViewer
                                 diagnosisArea={reportData.diagnosis}
-                                bodyPart={reportData.brain_region}
+                                bodyPart={reportData.diagnosis === 'no_tumor' ? null : reportData.brain_region}
+                                severity={reportData.diagnosis === 'no_tumor' ? 'normal' : (reportData.severity || 'low')}
+                                showControls={false}
                             />
                         </div>
                         <div className="relative z-10 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20">

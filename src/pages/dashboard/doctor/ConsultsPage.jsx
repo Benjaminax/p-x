@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PageHeader from '../../../components/ui/PageHeader';
 import GlassCard from '../../../components/ui/GlassCard';
 import { Button } from '../../../components/ui/Button';
 import { Video, Phone, FileText, Calendar, User, Clock } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '../../../lib/utils';
 
 const ConsultCard = ({ patient, type, time, status, notes, onJoin }) => (
     <GlassCard className="p-6 hover:shadow-md transition-shadow border-[var(--color-border)] bg-[var(--color-surface)]">

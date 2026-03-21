@@ -8,4 +8,6 @@ export declare class UsersService {
     create(createUserDto: CreateUserDto): Promise<User>;
     findOne(email: string): Promise<User | null>;
     findById(id: string): Promise<User | null>;
+    setRefreshToken(userId: string, refreshTokenHash: string, refreshTokenExpiresAt: Date): Promise<void>;
+    clearRefreshToken(userId: string): Promise<void>;
 }

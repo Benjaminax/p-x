@@ -85,6 +85,20 @@ let UsersService = class UsersService {
     async findById(id) {
         return this.userModel.findById(id).exec();
     }
+    async setRefreshToken(userId, refreshTokenHash, refreshTokenExpiresAt) {
+        await this.userModel.findByIdAndUpdate(userId, {
+            refreshTokenHash,
+            refreshTokenExpiresAt,
+        }).exec();
+    }
+    async clearRefreshToken(userId) {
+        await this.userModel.findByIdAndUpdate(userId, {
+            $unset: {
+                refreshTokenHash: 1,
+                refreshTokenExpiresAt: 1,
+            },
+        }).exec();
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

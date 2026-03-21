@@ -22,14 +22,14 @@ export default function ScanReviewPage() {
       <GlassCard className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <ThreeDViewer />
+            <ThreeDViewer showHighlight={false} />
             <p className="text-xs text-zinc-500 mt-2">Interactive 3D viewer. Use mouse to rotate and zoom. This is a lightweight viewer scaffold — integrate glTF models or DICOM renderer for production.</p>
           </div>
           <div className="flex flex-col gap-3">
             <div className="p-3 rounded-md bg-white shadow-sm flex items-center justify-between">
               <div>
                 <h4 className="font-semibold">Findings</h4>
-                <p className="text-sm text-zinc-600 mt-2">Region highlighted shows an anomalous density. Confidence: <strong>94%</strong>.</p>
+                <p className="text-sm text-zinc-600 mt-2">Region highlighted (if any) indicates an area of interest — review AI findings and clinical notes for confirmation.</p>
               </div>
               <div>
                 <LottieAnimation url="https://assets8.lottiefiles.com/packages/lf20_x62chJ.json" style={{ width: 80, height: 80 }} />

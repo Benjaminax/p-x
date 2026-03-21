@@ -58,6 +58,8 @@ const SidebarItem = ({ icon: Icon, label, to, collapsed }) => {
 
 const DashboardLayout = ({ role = 'patient' }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
     const [showAIPanel, setShowAIPanel] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const { user, logout } = useAuth();
@@ -92,7 +94,7 @@ const DashboardLayout = ({ role = 'patient' }) => {
                 initial={{ width: 240 }}
                 animate={{ width: collapsed ? 80 : 260 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full bg-white/95 backdrop-blur border-r border-[var(--color-border)] flex flex-col z-20 shadow-[4px_0_24px_-8px_rgba(15,23,42,0.12)]"
+                className="hidden md:flex h-full bg-white/95 backdrop-blur border-r border-[var(--color-border)] flex flex-col z-20 shadow-[4px_0_24px_-8px_rgba(15,23,42,0.12)]"
             >
                 {/* Sidebar Header */}
                 <div className="h-20 flex items-center px-6 border-b border-[var(--color-border)] justify-between">
@@ -175,11 +177,22 @@ const DashboardLayout = ({ role = 'patient' }) => {
             {/* Main Content */}
             <main className="flex-1 flex flex-col min-w-0 bg-[var(--color-bg)]">
                 {/* Top Header */}
-                <header className="h-16 bg-white/95 backdrop-blur border-b border-[var(--color-border)] flex items-center justify-between px-6 sm:px-8">
-                    <div className="flex-1 max-w-xl">
-                        <div className="relative">
-                        <SearchInput placeholder={effectiveRole === 'patient' ? 'Find a doctor, department, or record...' : 'Search for patients, symptoms, or files...'} onSearch={(q) => navigate(`/search?q=${encodeURIComponent(q)}`)} />
-                    </div>
+                <header className="h-16 bg-white/95 backdrop-blur border-b border-[var(--color-border)] flex items-center justify-between px-4 sm:px-8">
+                    <div className="flex-1 max-w-xl flex items-center gap-3">
+                        {/* mobile hamburger + search (small screens) */}
+                        <div className="md:hidden flex items-center gap-2">
+                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 rounded-lg hover:bg-zinc-100 text-zinc-600" aria-label="Open menu">
+                                <Menu className="w-5 h-5" />
+                            </button>
+                            <button onClick={() => setMobileSearchOpen(true)} className="p-2 rounded-lg hover:bg-zinc-100 text-zinc-600" aria-label="Search">
+                                <Search className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* search - hidden on small screens */}
+                        <div className="hidden md:block w-full">
+                            <SearchInput placeholder={effectiveRole === 'patient' ? 'Find a doctor, department, or record...' : 'Search for patients, symptoms, or files...'} onSearch={(q) => navigate(`/search?q=${encodeURIComponent(q)}`)} />
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -198,6 +211,57 @@ const DashboardLayout = ({ role = 'patient' }) => {
                     </div>
                 </header>
 
+                {/* Mobile sidebar drawer */}
+                {mobileMenuOpen && (
+                    <div className="fixed inset-0 z-40 md:hidden">
+                        <div onClick={() => setMobileMenuOpen(false)} className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+                        <motion.div initial={{ x: -320 }} animate={{ x: 0 }} exit={{ x: -320 }} transition={{ type: 'spring', damping: 20, stiffness: 300 }} className="relative w-72 max-w-[85%] h-full bg-white/95 border-r border-[var(--color-border)] flex flex-col z-50 shadow-2xl">
+                            <div className="h-20 flex flex-col justify-center px-4 border-b border-[var(--color-border)]">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-9 w-9 bg-[var(--color-accent)] rounded-xl flex items-center justify-center shadow-lg text-white font-semibold">PX</div>
+                                        <span className="text-lg font-semibold tracking-tight text-slate-900">Project X</span>
+                                    </div>
+                                    <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-zinc-100 text-zinc-600"><X className="w-5 h-5" /></button>
+                                </div>
+                                <div className="mt-3">
+                                    <SearchInput placeholder={effectiveRole === 'patient' ? 'Find a doctor, department, or record...' : 'Search for patients, symptoms, or files...'} onSearch={(q) => { setMobileMenuOpen(false); navigate(`/search?q=${encodeURIComponent(q)}`); }} />
+                                </div>
+                            </div>
+
+                            <div className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
+                                {navItems.map((item) => (
+                                    <SidebarItem key={item.to} {...item} collapsed={false} />
+                                ))}
+                            </div>
+
+                            <div className="p-4 border-t border-[var(--color-border)] bg-slate-50/80 backdrop-blur-sm">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 bg-[var(--color-surface-hover)] rounded-full flex items-center justify-center flex-shrink-0 border border-white shadow-sm"><User className="w-5 h-5 text-[var(--color-accent)]" /></div>
+                                    <div className="flex-1 min-w-0 text-left">
+                                        <p className="text-sm font-semibold truncate text-zinc-900">{displayName}</p>
+                                        <p className="text-xs text-zinc-500 truncate font-medium">{subtitle}</p>
+                                    </div>
+                                    <button onClick={() => { logout(); setMobileMenuOpen(false); navigate('/login'); }} className="text-sm text-red-600">Log out</button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Mobile search sheet (separate from drawer) */}
+                {mobileSearchOpen && (
+                    <div className="fixed inset-0 z-50 md:hidden">
+                        <div onClick={() => setMobileSearchOpen(false)} className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+                        <div className="relative mx-4 mt-20 bg-white rounded-xl p-4 z-60 shadow-2xl">
+                            <div className="flex items-center gap-3">
+                                <SearchInput placeholder={effectiveRole === 'patient' ? 'Find a doctor, department, or record...' : 'Search for patients, symptoms, or files...'} onSearch={(q) => { setMobileSearchOpen(false); navigate(`/search?q=${encodeURIComponent(q)}`); }} />
+                                <button onClick={() => setMobileSearchOpen(false)} className="ml-2 p-2 rounded-lg hover:bg-zinc-100 text-zinc-600" aria-label="Close search"><X className="w-5 h-5" /></button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Page Content */}
                 <div className="flex-1 overflow-y-auto p-6 sm:p-8">
                     <Outlet />
@@ -205,7 +269,7 @@ const DashboardLayout = ({ role = 'patient' }) => {
 
                 {/* AI Assistant Right Panel */}
                 {showAIPanel && (
-                    <aside className="fixed right-4 sm:right-6 top-20 w-[360px] glass-panel rounded-xl p-4 shadow-float z-40 animate-slide-up border border-[var(--color-border)]">
+                    <aside className="fixed z-40 sm:top-20 sm:right-6 sm:left-auto sm:w-[360px] right-0 left-0 bottom-0 w-full sm:rounded-xl rounded-t-2xl glass-panel p-4 shadow-float animate-slide-up border border-[var(--color-border)]">
                         <div className="flex items-start justify-between gap-3">
                             <div>
                                 <h4 className="text-lg font-semibold">AI Assistant</h4>

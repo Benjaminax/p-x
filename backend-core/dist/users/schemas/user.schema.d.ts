@@ -3,7 +3,8 @@ export declare enum UserRole {
     ADMIN = "admin",
     DOCTOR = "doctor",
     NURSE = "nurse",
-    PATIENT = "patient"
+    PATIENT = "patient",
+    SUPER_ADMIN = "super_admin"
 }
 export declare class User extends Document {
     email: string;
@@ -12,6 +13,8 @@ export declare class User extends Document {
     role: UserRole;
     nhiNumber?: string;
     phoneNumber?: string;
+    refreshTokenHash?: string;
+    refreshTokenExpiresAt?: Date;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, (Document<unknown, any, User, any, import("mongoose").DefaultSchemaOptions> & User & Required<{
     _id: import("mongoose").Types.ObjectId;
@@ -87,6 +90,24 @@ export declare const UserSchema: import("mongoose").Schema<User, import("mongoos
         id: string;
     }> | undefined;
     phoneNumber?: import("mongoose").SchemaDefinitionProperty<string | undefined, User, Document<unknown, {}, User, {
+        id: string;
+    }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    refreshTokenHash?: import("mongoose").SchemaDefinitionProperty<string | undefined, User, Document<unknown, {}, User, {
+        id: string;
+    }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<User & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    refreshTokenExpiresAt?: import("mongoose").SchemaDefinitionProperty<Date | undefined, User, Document<unknown, {}, User, {
         id: string;
     }, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & Omit<User & Required<{
         _id: import("mongoose").Types.ObjectId;

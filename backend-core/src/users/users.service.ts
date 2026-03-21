@@ -48,4 +48,20 @@ export class UsersService {
     async findById(id: string): Promise<User | null> {
         return this.userModel.findById(id).exec();
     }
+
+    async setRefreshToken(userId: string, refreshTokenHash: string, refreshTokenExpiresAt: Date): Promise<void> {
+        await this.userModel.findByIdAndUpdate(userId, {
+            refreshTokenHash,
+            refreshTokenExpiresAt,
+        }).exec();
+    }
+
+    async clearRefreshToken(userId: string): Promise<void> {
+        await this.userModel.findByIdAndUpdate(userId, {
+            $unset: {
+                refreshTokenHash: 1,
+                refreshTokenExpiresAt: 1,
+            },
+        }).exec();
+    }
 }

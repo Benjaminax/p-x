@@ -1,0 +1,6 @@
+{
+  "backbone": "resnet50",
+  "epochs_trained": 8,
+  "batch_size": 16,
+  "seed": 42
+}

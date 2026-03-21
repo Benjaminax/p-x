@@ -34,6 +34,7 @@ import RecordsPage from './pages/dashboard/patient/RecordsPage';
 import PatientsPage from './pages/dashboard/doctor/PatientsPage';
 import AIPage from './pages/dashboard/doctor/AIPage';
 import SchedulePage from './pages/dashboard/doctor/SchedulePage';
+import ConsultsPage from './pages/dashboard/doctor/ConsultsPage';
 import RecordViewPage from './pages/dashboard/patient/RecordViewPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
@@ -130,6 +131,7 @@ function App() {
             <Route path="patients" element={<PatientsPage />} />
             <Route path="ai" element={<AIPage />} />
             <Route path="schedule" element={<SchedulePage />} />
+            <Route path="consults" element={<ConsultsPage />} />
             <Route path="neuro" element={<NeuroDashboard />} />
           </Route>
 

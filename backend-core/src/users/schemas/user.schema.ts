@@ -6,6 +6,7 @@ export enum UserRole {
     DOCTOR = 'doctor',
     NURSE = 'nurse',
     PATIENT = 'patient',
+    SUPER_ADMIN = 'super_admin',
 }
 
 @Schema({ timestamps: true })
@@ -28,6 +29,12 @@ export class User extends Document {
 
     @Prop()
     phoneNumber?: string;
+
+    @Prop()
+    refreshTokenHash?: string;
+
+    @Prop()
+    refreshTokenExpiresAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

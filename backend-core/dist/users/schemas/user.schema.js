@@ -18,6 +18,7 @@ var UserRole;
     UserRole["DOCTOR"] = "doctor";
     UserRole["NURSE"] = "nurse";
     UserRole["PATIENT"] = "patient";
+    UserRole["SUPER_ADMIN"] = "super_admin";
 })(UserRole || (exports.UserRole = UserRole = {}));
 let User = class User extends mongoose_2.Document {
     email;
@@ -26,6 +27,8 @@ let User = class User extends mongoose_2.Document {
     role;
     nhiNumber;
     phoneNumber;
+    refreshTokenHash;
+    refreshTokenExpiresAt;
 };
 exports.User = User;
 __decorate([
@@ -52,6 +55,14 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "phoneNumber", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "refreshTokenHash", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], User.prototype, "refreshTokenExpiresAt", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

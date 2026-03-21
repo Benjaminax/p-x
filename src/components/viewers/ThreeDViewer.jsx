@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-export default function ThreeDViewer({ className = '', style = {} }) {
+export default function ThreeDViewer({ className = '', style = {}, showHighlight = false, highlightPosition = [0.5, 0.2, 1.0], highlightColor = 0xff6b6b }) {
   const mountRef = useRef(null);
 
   useEffect(() => {
@@ -44,11 +44,14 @@ export default function ThreeDViewer({ className = '', style = {} }) {
 
     scene.add(group);
 
-    // Highlight region (anomaly)
-    const highlightMat = new THREE.MeshStandardMaterial({ color: 0xff6b6b, emissive: 0xff6b6b, emissiveIntensity: 0.3 });
-    const highlight = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), highlightMat);
-    highlight.position.set(0.5, 0.2, 1.0);
-    scene.add(highlight);
+    // Optional highlight region (anomaly) — render ONLY when explicitly requested
+    if (showHighlight) {
+      const highlightMat = new THREE.MeshStandardMaterial({ color: highlightColor, emissive: highlightColor, emissiveIntensity: 0.3 });
+      const highlight = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), highlightMat);
+      const [hx, hy, hz] = highlightPosition;
+      highlight.position.set(hx, hy, hz);
+      scene.add(highlight);
+    }
 
     // Responsive
     const handleResize = () => {

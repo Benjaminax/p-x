@@ -97,3 +97,11 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: #d4d4d8;
 }
+
+/* Responsive type scale & touch helpers */
+html { font-size: 16px; }
+@media (max-width: 640px) { html { font-size: 14px; } }
+@media (min-width: 1280px) { html { font-size: 16.5px; } }
+
+.touchable { -webkit-tap-highlight-color: transparent; touch-action: manipulation; -ms-touch-action: manipulation; }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 12px); }

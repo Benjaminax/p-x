@@ -248,7 +248,7 @@ const AIPage = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {[
-                                { title: "PX-9921 - Hemorrhage Risk", level: "High", time: "2m ago" },
+                                { title: "PX-9921 - Tumor Alert", level: "High", time: "2m ago" },
                                 { title: "PX-9812 - Neural Shift", level: "Med", time: "1h ago" }
                             ].map((alert, i) => (
                                 <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
@@ -272,7 +272,7 @@ const AIPage = () => {
                         <div className="space-y-6">
                             {[
                                 { label: "Glioma Matching", val: "94.2%", trend: "up" },
-                                { label: "Ischemic Pattern", val: "12.1%", trend: "down" }
+                                { label: "Meningioma Matching", val: "66.1%", trend: "up" }
                             ].map((stat, i) => (
                                 <div key={i} className="flex justify-between items-center">
                                     <span className="text-xs font-bold text-white/40">{stat.label}</span>

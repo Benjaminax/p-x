@@ -8,7 +8,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="hidden lg:flex w-1/2 flex-col justify-between p-12 relative overflow-hidden"
+                className="hidden md:flex w-2/5 lg:w-1/2 flex-col justify-between p-6 md:p-12 relative overflow-hidden"
                 style={{
                     background: 'radial-gradient(circle at 20% 20%, rgba(14,165,233,0.18), transparent 45%), radial-gradient(circle at 80% 10%, rgba(14,165,233,0.12), transparent 40%), linear-gradient(135deg, #0f172a 0%, #0b1220 100%)'
                 }}
@@ -31,7 +31,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
                         initial={{ y: 16, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl font-semibold text-white leading-tight tracking-tight"
+                        className="text-3xl md:text-5xl font-semibold text-white leading-tight tracking-tight"
                     >
                         A calmer clinical workspace with guided collaboration.
                     </motion.h1>

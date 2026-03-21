@@ -49,6 +49,9 @@ const app_service_1 = require("./app.service");
 const logger_middleware_1 = require("./common/middleware/logger.middleware");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
+const medical_records_module_1 = require("./medical-records/medical-records.module");
+const messaging_module_1 = require("./messaging/messaging.module");
+const patients_module_1 = require("./patients/patients.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -70,6 +73,10 @@ exports.AppModule = AppModule = __decorate([
                     PORT: Joi.number().default(3001),
                     MONGODB_URI: Joi.string().required(),
                     JWT_SECRET: Joi.string().required(),
+                    JWT_EXPIRATION: Joi.string().default('15m'),
+                    JWT_REFRESH_SECRET: Joi.string().required(),
+                    JWT_REFRESH_EXPIRATION: Joi.string().default('7d'),
+                    ALLOWED_ORIGINS: Joi.string().optional(),
                 }),
             }),
             mongoose_1.MongooseModule.forRootAsync({
@@ -81,6 +88,9 @@ exports.AppModule = AppModule = __decorate([
             }),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
+            medical_records_module_1.MedicalRecordsModule,
+            messaging_module_1.MessagingModule,
+            patients_module_1.PatientsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

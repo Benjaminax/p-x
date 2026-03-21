@@ -210,6 +210,35 @@ export default function NeuroDashboard() {
     const threeViewerRef = React.useRef(null);
     const { showToast } = useToast();
 
+    // Derive a simple severity for UI/highlighting (can be overridden by server output)
+    const severity = React.useMemo(() => {
+        if (!analysis) return 'normal';
+        // server-provided severity takes precedence
+        if (analysis.severity) {
+            return analysis.severity;
+        }
+
+        const diag = (analysis.diagnosis || '').toLowerCase();
+        // explicit normal/no-tumor -> normal severity (avoids false-positive highlights)
+        if (diag.includes('no_tumor') || diag.includes('no ') || diag.includes('normal')) return 'normal';
+        // Only infer severity from the four DESIGN labels
+        if (diag.includes('pituitary')) return 'medium';
+        if (diag.includes('glioma') || diag.includes('meningioma') || diag.includes('tumor') || diag.includes('glioblastoma') || diag.includes('hgg')) return 'high';
+
+        const conf = typeof analysis.confidence === 'number' ? analysis.confidence : 0;
+        if (conf >= 0.95) return 'high';
+        if (conf >= 0.80) return 'medium';
+        return 'low';
+    }, [analysis]);
+
+    // compute sorted differential list for UI
+    const differential = React.useMemo(() => {
+        if (!analysis || !analysis.probabilities) return [];
+        return Object.entries(analysis.probabilities)
+            .map(([name, p]) => ({ name, prob: Number(p) }))
+            .sort((a, b) => b.prob - a.prob);
+    }, [analysis]);
+
     const [sessions, setSessions] = useState([]);
 
     // Load sessions from localStorage
@@ -219,6 +248,24 @@ export default function NeuroDashboard() {
             setSessions(JSON.parse(saved));
         }
     }, []);
+
+    function normalizeBodyPartName(raw) {
+        if (!raw) return null;
+        const l = (raw || '').toLowerCase();
+        if (l.includes('temporal')) return 'Temporal Lobe';
+        if (l.includes('frontal')) return 'Frontal Lobe';
+        if (l.includes('parietal')) return 'Parietal Lobe';
+        if (l.includes('occipital')) return 'Occipital Lobe';
+        if (l.includes('cerebell')) return 'Cerebellum';
+        if (l.includes('brain stem') || l.includes('brainstem') || l.includes('pons') || l.includes('sella') || l.includes('pituitary')) return 'Brain Stem';
+        if (l.includes('parahippocampal') && l.includes('left')) return 'Left Parahippocampal Gyrus';
+        if (l.includes('parahippocampal') && l.includes('right')) return 'Right Parahippocampal Gyrus';
+        if (l.includes('middle cerebral artery') || l.includes('mca')) return 'Middle Cerebral Artery';
+        if (l.includes('sagittal sinus')) return 'Sagittal Sinus';
+        if (l.includes('whole brain') || l.includes('global') || l.includes('normal')) return 'Whole Brain';
+        // fallback: return original string so UI can display it (no region highlight if unknown)
+        return raw;
+    }
 
     const analysisSteps = [
         "Initializing Volumetric Engine",
@@ -230,138 +277,52 @@ export default function NeuroDashboard() {
     ];
 
     const tumorData = {
-        alzheimers: {
-            diagnosis: "Alzheimer's Disease (Early-Stage)",
-            brain_region: "Hippocampus & Temporal Lobe",
-            confidence: 0.9942,
-            volume: "Atrophy Detected",
-            relative_growth: "-12% Volumetric Loss",
-            biomarkers: ["p-tau217 Positive", "Amyloid-β 42/40 Ratio Low", "APOE ε4 Heterozygote"],
-            probable_causes: "Neurodegenerative process characterized by amyloid plaque deposition and tau neurofibrillary tangles. Significant hippocampal atrophy.",
+        'glioma_tumor': {
+            diagnosis: 'Glioma / Glioblastoma (representative)',
+            brain_region: 'Left Parahippocampal Gyrus',
+            confidence: 0.98,
+            volume: '14.8 cm³',
+            relative_growth: '+2.4% vs prev',
+            biomarkers: ['IDH-wildtype (likely)', 'MGMT status unknown'],
+            probable_causes: 'Aggressive intra-axial mass with surrounding edema.',
             solutions: [
-                { title: "Anti-Amyloid Immunotherapy", desc: "Lecanemab (Leqembi) infusion protocol.", type: "standard" },
-                { title: "Cognitive Rehabilitation", desc: "Neuropsychological training to maintain function.", type: "info" },
-                { title: "Cholinesterase Inhibitor", desc: "Donepezil to manage symptoms.", type: "standard" }
+                { title: 'Neurosurgical Evaluation', desc: 'Consider biopsy / resection', type: 'critical' },
+                { title: 'MRI with Contrast', desc: 'Pre-surgical planning', type: 'standard' }
             ],
-            suspects: [
-                { name: "Alzheimer's Dementia", probability: 0.98, color: "rose" },
-                { name: "Frontotemporal Dementia", probability: 0.01, color: "orange" },
-                { name: "Lewy Body Dementia", probability: 0.01, color: "emerald" }
-            ]
+            suspects: [ { name: 'Glioma', probability: 0.98, color: 'rose' } ]
         },
-        ms: {
-            diagnosis: "Multiple Sclerosis (Relapsing-Remitting)",
-            brain_region: "Periventricular White Matter",
-            confidence: 0.9987,
-            volume: "1.8 cm³ Lesion Load",
-            relative_growth: "Active Inflammation",
-            biomarkers: ["Oligoclonal Bands Positive", "sNfL Elevated", "IgG Index High"],
-            probable_causes: "Autoimmune demyelination event. Multiple hyperintense T2-flair lesions (Dawson's Fingers) indicating active disease activity.",
-            solutions: [
-                { title: "B-Cell Depletion Therapy", desc: "Ocrelizumab (Ocrevus) infusion.", type: "critical" },
-                { title: "Corticosteroids", desc: "High-dose Solu-Medrol for acute flare.", type: "standard" },
-                { title: "Vitamin D Supplementation", desc: "Optimize serum 25(OH)D levels.", type: "info" }
-            ],
-            suspects: [
-                { name: "Multiple Sclerosis", probability: 0.99, color: "rose" },
-                { name: "Neuromyelitis Optica", probability: 0.01, color: "orange" },
-                { name: "Acute Disseminated Encephalomyelitis", probability: 0.00, color: "emerald" }
-            ]
+        'meningioma_tumor': {
+            diagnosis: 'Meningioma (dural-based)',
+            brain_region: 'Right Frontal Lobe',
+            confidence: 0.96,
+            volume: '8.4 cm³',
+            relative_growth: '+0.1% vs prev',
+            biomarkers: ['Dural tail sign on imaging'],
+            probable_causes: 'Extra-axial enhancing lesion likely meningioma.',
+            solutions: [ { title: 'Neurosurgical Review', desc: 'Consider resection or radiosurgery', type: 'standard' } ],
+            suspects: [ { name: 'Meningioma', probability: 0.96, color: 'emerald' } ]
         },
-        stroke: {
-            diagnosis: "Acute Ischemic Stroke (MCA Territory)",
-            brain_region: "Right Middle Cerebral Artery",
-            confidence: 0.9995,
-            volume: "24 cm³ Penumbra",
-            relative_growth: "Cytotoxic Edema",
-            biomarkers: ["D-Dimer Elevated", "GFAP Release", "Lipid Profile Abnormal"],
-            probable_causes: "Thromboembolic occlusion of the M1 segment. Diffusion-perfusion mismatch generally indicates salvageable tissue.",
-            solutions: [
-                { title: "Thrombolysis", desc: "IV Tenecteplase (Within 4.5hr window).", type: "critical" },
-                { title: "Mechanical Thrombectomy", desc: "Endovascular clot retrieval.", type: "critical" },
-                { title: "Neuroprotection", desc: "Maintain perfusion pressure & normoglycemia.", type: "standard" }
-            ],
-            suspects: [
-                { name: "Ischemic Stroke", probability: 0.99, color: "rose" },
-                { name: "TIA", probability: 0.01, color: "yellow" },
-                { name: "Hemorrhagic Conversion", probability: 0.00, color: "red" }
-            ]
+        'pituitary_tumor': {
+            diagnosis: 'Pituitary Tumor (sellar mass)',
+            brain_region: 'Sella / Brain Stem (visual proxy)',
+            confidence: 0.93,
+            volume: '1.2 cm³',
+            relative_growth: 'stable',
+            biomarkers: ['Endocrine panel advised'],
+            probable_causes: 'Sellar/suprasellar lesion consistent with pituitary adenoma.',
+            solutions: [ { title: 'Endocrinology Consult', desc: 'Hormonal workup & MRI follow-up', type: 'standard' } ],
+            suspects: [ { name: 'Pituitary Tumor', probability: 0.93, color: 'orange' } ]
         },
-        glioma: {
-            diagnosis: "Glioblastoma Multiforme (WHO Grade 4)",
-            brain_region: "Left Parahippocampal Gyrus",
-            confidence: 0.9984,
-            volume: "14.82 cm³",
-            relative_growth: "+2.4% vs prev",
-            biomarkers: ["IDH-Wildtype", "MGMT Promoter Unmethylated", "EGFR Amplified"],
-            probable_causes: "Aggressive diffuse astrocytic tumor with microvascular proliferation and necrosis. poor prognosis indicators present.",
-            solutions: [
-                { title: "Maximal Safe Resection", desc: "Standard of care: Fluorescence-guided surgery (5-ALA).", type: "critical" },
-                { title: "Stupp Protocol", desc: "Radiotherapy (60Gy) + Concomitant Temozolomide.", type: "standard" },
-                { title: "Tumor Treating Fields", desc: "Optune device therapy to disrupt mitosis.", type: "info" },
-                { title: "Targeted Therapy", desc: "Clinical evaluation for Vorasidenib if IDH-mutant.", type: "info" }
-            ],
-            suspects: [
-                { name: "Glioblastoma (WHO Grade 4)", probability: 0.98, color: "rose" },
-                { name: "Anaplastic Astrocytoma", probability: 0.02, color: "orange" },
-                { name: "Lymphoma", probability: 0.00, color: "emerald" }
-            ]
-        },
-        meningioma: {
-            diagnosis: "Transitional Meningioma (WHO Grade 1)",
-            brain_region: "Right Frontal Convexity",
-            confidence: 0.9992,
-            volume: "8.4 cm³",
-            relative_growth: "+0.1% vs prev",
-            biomarkers: ["NF2 Mutation", "TRAF7", "SSTR2-Positive"],
-            probable_causes: "Extra-axial dural-based mass with dural tail sign. Slow-growing, likely benign etiology.",
-            solutions: [
-                { title: "Active Surveillance", desc: "Serial MRI monitoring (Wait-and-Scan) for asymptomatic cases.", type: "standard" },
-                { title: "Stereotactic Radiosurgery", desc: "Gamma Knife/CyberKnife for tumor control.", type: "info" },
-                { title: "Surgical Resection", desc: "Simpson Grade I removal if symptomatic.", type: "critical" }
-            ],
-            suspects: [
-                { name: "Meningioma (Grade 1)", probability: 0.99, color: "emerald" },
-                { name: "Atypical Meningioma (Grade 2)", probability: 0.01, color: "orange" },
-                { name: "Hemangiopericytoma", probability: 0.00, color: "rose" }
-            ]
-        },
-        pituitary: {
-            diagnosis: "Prolactinoma (Functional Adenoma)",
-            brain_region: "Sella Turcica",
-            confidence: 0.9965,
-            volume: "1.2 cm³",
-            relative_growth: "Stable",
-            biomarkers: ["Serum Prolactin > 200 ng/mL", "PIT-1 Lineage"],
-            probable_causes: "Microadenoma causing hyperprolactinemia. Mass effect on optic chiasm risk: Low.",
-            solutions: [
-                { title: "Dopamine Agonist", desc: "Cabergoline/Bromocriptine (First-line therapy).", type: "standard" },
-                { title: "Endoscopic Surgery", desc: "Transsphenoidal resection if drug-resistant.", type: "critical" },
-                { title: "Endocrine Monitoring", desc: "Regular assessment of PRL and cortisol levels.", type: "info" }
-            ],
-            suspects: [
-                { name: "Prolactinoma", probability: 0.96, color: "emerald" },
-                { name: "Non-functioning Adenoma", probability: 0.03, color: "yellow" },
-                { name: "Rathke's Cleft Cyst", probability: 0.01, color: "zinc" }
-            ]
-        },
-        no_tumor: {
-            diagnosis: "No Intracranial Pathology",
-            brain_region: "Global Cortex - Normal",
+        'no_tumor': {
+            diagnosis: 'No Intracranial Pathology Detected',
+            brain_region: 'Whole Brain',
             confidence: 0.9999,
-            volume: "N/A",
-            relative_growth: "N/A",
-            biomarkers: ["Normal Metabolic Profile", "No Enhancement"],
-            probable_causes: "Brain parenchyma appears normal. Ventricles and sulci are within normal limits. No mass effect or midline shift observed.",
-            solutions: [
-                { title: "Routine Follow-up", desc: "Annual check-up recommended.", type: "info" },
-                { title: "Lifestyle Optimization", desc: "Maintain cardiovascular health.", type: "standard" },
-                { title: "Symptom Log", desc: "Track headaches if they persist.", type: "info" }
-            ],
-            suspects: [
-                { name: "Normal Anatomy", probability: 0.99, color: "emerald" },
-                { name: "Artifact", probability: 0.01, color: "zinc" }
-            ]
+            volume: 'N/A',
+            relative_growth: 'N/A',
+            biomarkers: [],
+            probable_causes: 'No focal lesion identified on the scan.',
+            solutions: [ { title: 'Routine Follow-up', desc: 'Clinical correlation recommended', type: 'info' } ],
+            suspects: [ { name: 'Normal', probability: 0.9999, color: 'emerald' } ]
         }
     };
 
@@ -388,45 +349,53 @@ export default function NeuroDashboard() {
                 await new Promise(r => setTimeout(r, 1000));
             }
 
-            // Intelligent Simulation: Detect Diagnosis from Filename
-            // This ensures the demo is "accurate" to the file the user uploads
-            let detectedType = 'no_tumor'; // Default to safe/clean scan
+            // Send image to backend process endpoint so the trained DESIGN model is used and region highlighting is accurate
+            let serverResult = null;
+            try {
+                const resp = await fetch('http://localhost:5000/process-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: preview })
+                });
 
-            if (selectedFile) {
-                const name = selectedFile.name.toLowerCase();
-                if (name.includes('glioma')) detectedType = 'glioma';
-                else if (name.includes('meningioma')) detectedType = 'meningioma';
-                else if (name.includes('pituitary')) detectedType = 'pituitary';
-                else if (name.includes('alzheimer') || name.includes('dementia')) detectedType = 'alzheimers';
-                else if (name.includes('ms') || name.includes('sclerosis') || name.includes('myelin')) detectedType = 'ms';
-                else if (name.includes('stroke') || name.includes('ischemic') || name.includes('infarct')) detectedType = 'stroke';
-                else if (name.includes('no') || name.includes('normal') || name.includes('clean')) detectedType = 'no_tumor';
-                else {
-                    // Fallback to random if filename is ambiguous, but weighted
-                    const types = ['glioma', 'meningioma', 'pituitary', 'alzheimers', 'ms', 'stroke', 'no_tumor'];
-                    detectedType = types[Math.floor(Math.random() * types.length)];
+                const json = await resp.json();
+                if (json?.status === 'success' && json.result) {
+                    serverResult = json.result;
                 }
+            } catch (err) {
+                console.warn('Backend analysis failed:', err);
             }
 
-            const result = tumorData[detectedType];
+            if (serverResult) {
+                // Map backend result -> UI analysis shape
+                const probs = serverResult.probabilities || {};
+                const suspects = Object.entries(probs).map(([name, p]) => ({ name, probability: p, color: p > 0.9 ? 'rose' : p > 0.8 ? 'orange' : 'emerald' }));
 
-            const data = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-                diagnosis: result.diagnosis,
-                brain_region: result.brain_region,
-                confidence: result.confidence,
-                volume: result.volume,
-                suspects: result.suspects,
-                solutions: result.solutions,
-                probable_causes: result.probable_causes,
-                biomarkers: result.biomarkers,
-                voxel_count: detectedType === 'no_tumor' ? "N/A" : "482,091 voxels", // simple logic
-                relative_growth: result.relative_growth
-            };
+                const data = {
+                    id: Date.now(),
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    diagnosis: serverResult.diagnosis || 'Unknown',
+                    display_name: serverResult.disease_display_name || serverResult.design_label || serverResult.diagnosis || 'Unknown',
+                    severity: serverResult.severity || (serverResult.region_analysis && serverResult.region_analysis.severity) || 'low',
+                    brain_region: normalizeBodyPartName(serverResult.body_part || serverResult.diagnosis_area || 'Whole Brain'),
+                    confidence: serverResult.confidence || 0,
+                    volume: serverResult.volume || 'N/A',
+                    suspects,
+                    solutions: serverResult.solutions || [],
+                    probable_causes: serverResult.findings || [],
+                    biomarkers: serverResult.findings || [],
+                    voxel_count: 'N/A',
+                    relative_growth: serverResult.relative_growth || 'N/A'
+                };
 
-            setAnalysis(data);
-            showToast('Neural synthesis complete', { type: 'success' });
+                setAnalysis(data);
+                showToast('Analysis complete (server)', { type: 'success' });
+            } else {
+                // Backend unreachable — do NOT perform a local demo fallback.
+                showToast('Backend not reachable — analysis unavailable. Start the backend at http://localhost:5000 and try again.', { type: 'error' });
+                setLoading(false);
+                return;
+            }
         } catch (err) {
             console.error(err);
             showToast('Protocol failure', { type: 'error' });
@@ -506,7 +475,7 @@ export default function NeuroDashboard() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[750px] items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-[520px] lg:min-h-[750px] items-stretch">
 
                     {/* LEFT: INPUT & PROTOCOL HUB */}
                     <div className="lg:col-span-3 flex flex-col gap-6">
@@ -594,19 +563,10 @@ export default function NeuroDashboard() {
                     {/* CENTER: 3D RECONSTRUCTION CORE */}
                     <div className="lg:col-span-6 flex flex-col relative">
                         <div className="flex-1 bg-white border border-zinc-100 rounded-[32px] relative overflow-hidden flex flex-col shadow-sm">
-                            {/* HUD Overlays */}
+                            {/* HUD Overlays (header removed) */}
                             <div className="absolute top-8 left-8 z-30 flex flex-col gap-4 pointer-events-none">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-teal-600 shadow-sm">
-                                        <BrainCircuit size={20} />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-[9px] font-bold text-zinc-400 uppercase tracking-[0.2em] leading-none mb-1">Vol-Array Mapping</h4>
-                                        <p className="text-sm font-bold font-sora tracking-tight text-slate-900 uppercase italic">Reconstruct_L72</p>
-                                    </div>
-                                </div>
 
-                                {analysis && (
+                                {analysis && analysis.diagnosis !== 'no_tumor' && (severity === 'high' || severity === 'medium') && (
                                     <motion.div
                                         initial={{ x: -20, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
@@ -632,12 +592,24 @@ export default function NeuroDashboard() {
                             </div>
 
                             {/* GPU Engine (Three.js) */}
-                            <div className="flex-1 w-full h-full relative z-20 cursor-move">
+                            <div className="flex-1 w-full relative z-20 cursor-move h-[320px] sm:h-[420px] md:h-[520px] lg:h-full">
                                 <LeaderLine visible={!!analysis} />
+
+                                {/* severity badge (color indicator for highlighted region) */}
+                                {analysis && (
+                                    <div className="absolute top-4 right-4 z-40 pointer-events-none">
+                                        <div className={"inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 border shadow-sm"}>
+                                            <span className={`w-2 h-2 rounded-full ${severity === 'high' ? 'bg-red-500' : severity === 'medium' ? 'bg-amber-500' : (severity === 'low' || severity === 'normal') ? 'bg-emerald-500' : 'bg-yellow-400'}`} />
+                                            <span className="text-[11px] font-semibold text-zinc-700">{analysis.brain_region || 'Whole Brain'} • {severity.toUpperCase()}</span>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <ThreeViewer
                                     ref={threeViewerRef}
                                     diagnosisArea={analysis?.diagnosis}
-                                    bodyPart={analysis?.brain_region}
+                                    bodyPart={analysis?.diagnosis === 'no_tumor' || severity === 'normal' ? null : analysis?.brain_region}
+                                    severity={analysis?.diagnosis === 'no_tumor' ? 'normal' : severity}
                                 />
                             </div>
 
@@ -669,6 +641,25 @@ export default function NeuroDashboard() {
                                     animate={{ x: 0, opacity: 1 }}
                                     className="flex-1 flex flex-col gap-6"
                                 >
+                                    {/* differential card */}
+                                    {differential.length > 0 && (
+                                        <div className="p-6 rounded-2xl bg-white border border-zinc-100 shadow-sm relative overflow-hidden">
+                                            <h3 className="text-[10px] font-bold font-sora uppercase tracking-[0.3em] text-zinc-400 mb-3">
+                                                Differential Diagnosis
+                                            </h3>
+                                            <ul className="space-y-1">
+                                                {differential.map(d => (
+                                                    <li key={d.name} className="flex justify-between text-[11px]">
+                                                        <span className="capitalize">
+                                                            {d.name.replace(/_/g, ' ').replace('tumor', 'Tumor')}
+                                                        </span>
+                                                        <span>{(d.prob * 100).toFixed(1)}%</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
                                     <div className="p-6 rounded-2xl bg-white border border-zinc-100 border-l-4 border-l-red-500 shadow-sm relative overflow-hidden">
                                         <h3 className="text-[10px] font-bold font-sora uppercase tracking-[0.3em] text-red-600 mb-3 flex items-center gap-2 leading-none">
                                             <AlertTriangle size={12} /> Critical Alert
@@ -706,34 +697,10 @@ export default function NeuroDashboard() {
                                         </div>
                                     </div>
 
-                                    <div className="p-6 rounded-2xl bg-white border border-zinc-100 shadow-sm">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h3 className="text-[10px] font-bold font-sora text-zinc-400 uppercase tracking-[0.2em]">Differential Diagnosis</h3>
-                                            <Badge className="bg-teal-50 text-teal-600 border-0 text-[9px] font-bold">AI CONFIDENCE</Badge>
-                                        </div>
-                                        <div className="space-y-5">
-                                            {analysis.suspects.map((suspect, i) => (
-                                                <div key={i} className="space-y-1.5">
-                                                    <div className="flex justify-between items-end text-[11px] font-bold text-slate-700">
-                                                        <span className="">{suspect.name}</span>
-                                                        <span className={`font-mono text-${suspect.color}-500`}>{(suspect.probability * 100).toFixed(1)}%</span>
-                                                    </div>
-                                                    <div className="h-[6px] bg-zinc-100 rounded-full overflow-hidden">
-                                                        <motion.div
-                                                            className={`h-full bg-${suspect.color}-500 shadow-[0_0_8px_rgba(var(--${suspect.color}-500),0.4)]`}
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: `${suspect.probability * 100}%` }}
-                                                            transition={{ delay: 0.5 + (i * 0.1), duration: 1, type: "spring" }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
 
                                     <div className="flex-1 p-6 rounded-2xl bg-white border border-zinc-100 shadow-sm flex flex-col min-h-0">
                                         <div className="flex justify-between items-center mb-4">
-                                            <h4 className="text-[10px] font-bold font-sora uppercase text-zinc-400 tracking-[0.25em] leading-none">Clinical Synthesis</h4>
+                                            <h4 className="text-[10px] font-bold font-sora uppercase text-zinc-400 tracking-[0.25em] leading-none">{analysis.critical_alert ? 'Critical Synthesis' : 'Clinical Synthesis'}</h4>
                                             <Info size={14} className="text-zinc-300" />
                                         </div>
                                         <div className="flex-1 bg-zinc-50/50 rounded-xl p-5 border border-zinc-100 overflow-y-auto">

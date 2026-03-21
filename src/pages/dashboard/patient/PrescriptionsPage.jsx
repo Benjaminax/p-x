@@ -17,6 +17,7 @@ import GlassCard from '../../../components/ui/GlassCard';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { useToast } from '../../../components/ui/Toast';
+import { cn } from '../../../lib/utils';
 
 const MedicationCard = ({ med, dose, frequency, doctor, refills, status, lastFilled }) => {
   const statusColors = {
@@ -197,6 +198,3 @@ export default function PrescriptionsPage() {
     </motion.div>
   );
 }
-
-const cn = (...classes) => classes.filter(Boolean).join(' ');
-

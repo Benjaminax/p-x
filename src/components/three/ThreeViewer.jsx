@@ -426,10 +426,13 @@ function NeuralLinks({ obj, playing, thinking }) {
     )
 }
 
-function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray, thinking, burbleUp }) {
+function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray, thinking, burbleUp, severity = 'normal' }) {
     const pointsRef = useRef()
     const shaderRef = useRef()
+    const highlightRef = useRef()
+    const highlightShaderRef = useRef()
     const [geometry, setGeometry] = useState(null)
+    const [highlightGeometry, setHighlightGeometry] = useState(null)
 
     const uniforms = useMemo(() => ({
         uTime: { value: 0 },
@@ -454,6 +457,13 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
 
     useEffect(() => {
         if (!obj) return
+
+        // Explicit: if diagnosisArea indicates 'no tumor' or 'normal', never produce highlight geometry
+        const isNoTumor = diagnosisArea && (String(diagnosisArea).toLowerCase().includes('no') || String(diagnosisArea).toLowerCase().includes('normal') || String(diagnosisArea).toLowerCase().includes('no_tumor'))
+
+        // Do not build region highlights for low/normal severity — highlights are reserved for medium/high
+        const severityIsSignificant = (severity === 'high' || severity === 'medium')
+
         const geometries = []
         obj.traverse((child) => {
             if (child.isMesh && child.geometry) geometries.push(child.geometry)
@@ -482,7 +492,48 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
         }
         geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3))
         setGeometry(geometry)
-    }, [obj])
+
+        // Build a separate geometry that contains ONLY the points inside the requested bodyPart zone
+        // Only create highlight geometry when severity is medium/high AND diagnosis is not 'no_tumor'
+        if (bodyPart && severityIsSignificant && !isNoTumor) {
+            const regionZones = {
+                'Frontal Lobe': { x: [20, 150], y: [-150, 150], z: [0, 150] },
+                'Parietal Lobe': { x: [-150, 20], y: [20, 150], z: [-50, 50] },
+                'Temporal Lobe': { x: [-100, 100], y: [-150, 0], z: [-50, 50] },
+                'Occipital Lobe': { x: [-150, -20], y: [-100, 100], z: [-150, 50] },
+                'Cerebellum': { x: [-100, 100], y: [-150, -50], z: [-100, -20] },
+                'Brain Stem': { x: [-20, 20], y: [-200, -100], z: [-20, 20] }
+            }
+            const zone = regionZones[bodyPart]
+            if (zone) {
+                const highlightPos = []
+                for (let i = 0; i < positions.length; i += 3) {
+                    const x = positions[i], y = positions[i + 1], z = positions[i + 2]
+                    const inZone = x >= (zone.x?.[0] ?? -999) && x <= (zone.x?.[1] ?? 999) && y >= (zone.y?.[0] ?? -999) && y <= (zone.y?.[1] ?? 999) && z >= (zone.z?.[0] ?? -999) && z <= (zone.z?.[1] ?? 999)
+                    if (inZone) {
+                        highlightPos.push(x, y, z)
+                    }
+                }
+                if (highlightPos.length > 0) {
+                    const hg = new THREE.BufferGeometry()
+                    hg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(highlightPos), 3))
+                    const highlightColorArray = new Float32Array((highlightPos.length / 3) * 3)
+                    // fill with neutral but shader will tint
+                    for (let i = 0; i < highlightColorArray.length; i += 3) {
+                        highlightColorArray[i] = 0.05; highlightColorArray[i + 1] = 0.65; highlightColorArray[i + 2] = 0.91
+                    }
+                    hg.setAttribute('color', new THREE.BufferAttribute(highlightColorArray, 3))
+                    setHighlightGeometry(hg)
+                } else {
+                    setHighlightGeometry(null)
+                }
+            } else {
+                setHighlightGeometry(null)
+            }
+        } else {
+            setHighlightGeometry(null)
+        }
+    }, [obj, bodyPart, severity, diagnosisArea])
 
     useEffect(() => {
         if (!geometry) return
@@ -501,15 +552,32 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
             'Middle Cerebral Artery': { x: [-60, 60], y: [-20, 40], z: [-20, 20] },
             'Sagittal Sinus': { x: [-10, 10], y: [100, 150], z: [-100, 100] }
         }
-        let severity = 'normal'
-        if (diagnosisArea) {
-            const diag = diagnosisArea.toLowerCase()
-            if (diag.includes('tumor') || diag.includes('glioblastoma') || diag.includes('hgg')) severity = 'high'
-            else if (diag.includes('stroke') || diag.includes('ischemic')) severity = 'high'
-            else if (diag.includes('alzheimer') || diag.includes('dementia')) severity = 'medium'
-            else severity = 'low'
+
+        // If diagnosis explicitly indicates no tumor, force normal coloring and skip highlights
+        const isNoTumor = diagnosisArea && (String(diagnosisArea).toLowerCase().includes('no') || String(diagnosisArea).toLowerCase().includes('normal') || String(diagnosisArea).toLowerCase().includes('no_tumor'))
+        if (isNoTumor) {
+            for (let i = 0; i < colorArray.length; i += 3) {
+                colorArray[i] = 0.05; colorArray[i + 1] = 0.65; colorArray[i + 2] = 0.91
+            }
+            geometry.attributes.color.needsUpdate = true
+            return
         }
-        const highlight = { high: { r: 1, g: 0.1, b: 0.1 }, medium: { r: 1, g: 0.6, b: 0 }, low: { r: 1, g: 1, b: 0 }, normal: { r: 0.05, g: 0.65, b: 0.91 } }[severity]
+
+        // Prefer the passed `severity` prop; only 'high' and 'medium' should produce visible highlights.
+        const effectiveSeverity = (severity === 'high' || severity === 'medium')
+            ? severity
+            : (() => {
+                let s = 'normal'
+                if (diagnosisArea) {
+                    const diag = diagnosisArea.toLowerCase()
+                    // Only recognise the four DESIGN training labels
+                    if (diag.includes('pituitary')) s = 'medium'
+                    else if (diag.includes('glioma') || diag.includes('meningioma') || diag.includes('tumor') || diag.includes('glioblastoma') || diag.includes('hgg')) s = 'high'
+                    else s = 'normal'
+                }
+                return s
+            })()
+        const highlight = { high: { r: 1, g: 0.1, b: 0.1 }, medium: { r: 1, g: 0.6, b: 0 }, normal: { r: 0.05, g: 0.65, b: 0.91 } }[effectiveSeverity]
 
         if (bodyPart && regionZones[bodyPart]) {
             const zone = regionZones[bodyPart]
@@ -537,23 +605,59 @@ function BrainParticles({ obj, playing, pointSize, diagnosisArea, bodyPart, xray
         if (shaderRef.current) shaderRef.current.uniforms.uTime.value = time
         const s = 1 + Math.sin(time * 1.2) * 0.012
         pointsRef.current.scale.set(s, s, s)
+
+        // animate highlight layer if present (pulse when severe)
+        if (highlightRef.current && highlightShaderRef.current) {
+            highlightShaderRef.current.uniforms.uTime.value = time
+            const pulse = severity === 'high' ? (1.0 + 0.25 * Math.abs(Math.sin(time * 3.0))) : 1.0
+            const base = pointSize * (severity === 'high' ? 2.6 : 2.0)
+            highlightShaderRef.current.uniforms.uPointSize.value = base * pulse
+        }
     })
 
     if (!geometry) return null
 
     return (
-        <points ref={pointsRef}>
-            <primitive object={geometry} attach="geometry" />
-            <shaderMaterial
-                ref={shaderRef}
-                attach="material"
-                args={[BrainShader]}
-                uniforms={uniforms}
-                transparent={true}
-                depthWrite={false}
-                blending={THREE.AdditiveBlending}
-            />
-        </points>
+        <>
+            <points ref={pointsRef}>
+                <primitive object={geometry} attach="geometry" />
+                <shaderMaterial
+                    ref={shaderRef}
+                    attach="material"
+                    args={[BrainShader]}
+                    uniforms={uniforms}
+                    transparent={true}
+                    depthWrite={false}
+                    blending={THREE.AdditiveBlending}
+                />
+            </points>
+
+            {/* Highlight layer (subset of points for the selected brain region) */}
+            {highlightGeometry && (
+                <points ref={highlightRef} geometry={highlightGeometry}>
+                    <primitive object={highlightGeometry} attach="geometry" />
+                    <shaderMaterial
+                        ref={highlightShaderRef}
+                        attach="material"
+                        args={[BrainShader]}
+                        uniforms={{
+                            uTime: { value: 0 },
+                            uColor: { value: new THREE.Color(severity === 'high' ? '#ef4444' : severity === 'medium' ? '#fb923c' : '#f59e0b') },
+                            uPointSize: { value: pointSize * (severity === 'high' ? 2.6 : 2.0) },
+                            uOpacity: { value: severity === 'high' ? 1.0 : 0.95 },
+                            uNoiseFreq: { value: 0.0 },
+                            uNoiseAmp: { value: 0.0 },
+                            uBurbleUp: { value: 0.0 },
+                            uXray: { value: 0.0 },
+                            uThinking: { value: 0.0 }
+                        }}
+                        transparent={true}
+                        depthWrite={false}
+                        blending={THREE.AdditiveBlending}
+                    />
+                </points>
+            )}
+        </>
     )
 }
 
@@ -574,7 +678,7 @@ function Loader() {
     )
 }
 
-export default function ThreeViewer({ diagnosisArea, bodyPart }) {
+export default function ThreeViewer({ diagnosisArea, bodyPart, severity = 'normal', showControls = true }) {
     const obj = useLoader(OBJLoader, "/static/models/brain-parts-big.obj")
     const [playing, setPlaying] = useState(true)
     const [pointSize, setPointSize] = useState(1.7)
@@ -608,7 +712,7 @@ export default function ThreeViewer({ diagnosisArea, bodyPart }) {
     }, [])
 
     return (
-        <div ref={containerRef} className="relative w-full h-full bg-[#1a1a1a] overflow-hidden">
+        <div ref={containerRef} role="region" aria-label="3D brain viewer" className="relative w-full h-full min-h-[42vh] sm:min-h-[48vh] md:min-h-[56vh] bg-[#1a1a1a] overflow-hidden">
             <Canvas camera={{ position: [0, 100, 480], fov: 35 }}>
                 <color attach="background" args={['#1a1a1a']} />
                 <fog attach="fog" args={['#1a1a1a', 100, 1200]} />
@@ -645,21 +749,23 @@ export default function ThreeViewer({ diagnosisArea, bodyPart }) {
                 />
             </Canvas>
 
-            <ControlsPanel
-                playing={playing}
-                setPlaying={setPlaying}
-                pointSize={pointSize}
-                setPointSize={setPointSize}
-                isFullscreen={isFullscreen}
-                toggleFullscreen={toggleFullscreen}
-                showXray={showXray}
-                setShowXray={setShowXray}
-                thinking={thinking}
-                setThinking={setThinking}
-                burbleUp={burbleUp}
-                setBurbleUp={setBurbleUp}
-                onReset={handleReset}
-            />
+            {showControls && (
+                <ControlsPanel
+                    playing={playing}
+                    setPlaying={setPlaying}
+                    pointSize={pointSize}
+                    setPointSize={setPointSize}
+                    isFullscreen={isFullscreen}
+                    toggleFullscreen={toggleFullscreen}
+                    showXray={showXray}
+                    setShowXray={setShowXray}
+                    thinking={thinking}
+                    setThinking={setThinking}
+                    burbleUp={burbleUp}
+                    setBurbleUp={setBurbleUp}
+                    onReset={handleReset}
+                />
+            )}
 
             <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]"></div>
         </div>
