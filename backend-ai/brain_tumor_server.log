@@ -19,3 +19,15 @@
 2026-03-21 16:38:16,461 - BrainTumorClassifier - INFO - Processing image of size: (512, 512)
 2026-03-21 16:38:16,470 - BrainTumorClassifier - INFO - Prediction: Glioma (confidence: 0.9949)
 2026-03-21 16:38:16,471 - werkzeug - INFO - 127.0.0.1 - - [21/Mar/2026 16:38:16] "POST /process-image HTTP/1.1" 200 -
+2026-03-21 16:40:54,460 - BrainTumorClassifier - INFO - Using device: cpu
+2026-03-21 16:40:54,461 - BrainTumorClassifier - INFO - Loading brain tumor model from C:\Users\kojob\Documents\GitHub\p-x-1\backend-ai\models\brain_tumor_model.pth
+2026-03-21 16:40:54,539 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.184:5000
+2026-03-21 16:40:54,539 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-21 16:41:08,060 - werkzeug - INFO - 127.0.0.1 - - [21/Mar/2026 16:41:08] "GET /health HTTP/1.1" 200 -
+2026-03-21 16:42:08,972 - werkzeug - INFO - 127.0.0.1 - - [21/Mar/2026 16:42:08] "OPTIONS /process-image HTTP/1.1" 200 -
+2026-03-21 16:42:09,249 - BrainTumorClassifier - INFO - Processing image of size: (512, 512)
+2026-03-21 16:42:09,300 - BrainTumorClassifier - INFO - Prediction: Glioma (confidence: 1.0000)
+2026-03-21 16:42:09,302 - werkzeug - INFO - 127.0.0.1 - - [21/Mar/2026 16:42:09] "POST /process-image HTTP/1.1" 200 -
