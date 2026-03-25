@@ -30,3 +30,83 @@ Quick commands:
 - Evaluate: `python backend-ai/training/evaluate.py` or `npm run eval:ai`
 
 The training script will automatically filter to the DESIGN folders (it ignores other folders) and will write the model to `models/multi_disease_from_design.pth` and the label map to `models/class_to_idx.json`.
+
+---
+
+## Quick Start (One Command)
+
+**No Docker. No MongoDB setup needed.**
+
+```bash
+npm run dev:all
+```
+
+This starts both backend and frontend with in-memory MongoDB for local development.
+
+The frontend runs on `http://localhost:5173` and the backend on `http://localhost:3001`.
+
+### Demo Doctor Login
+
+After startup (wait ~5 seconds for backend to initialize):
+
+- **Email:** `doctor.demo@neurohealth.local`
+- **Password:** `DoctorDemo123!`
+
+---
+
+## Local Run + Demo Doctor Login (Manual Steps)
+
+If you prefer to run backend and frontend separately:
+
+1. **Backend** (in-memory DB):
+   ```bash
+   npm run start:dev:local --prefix backend-core
+   ```
+
+2. **Frontend** (in another terminal):
+   ```bash
+   npm run dev
+   ```
+
+Then use the demo doctor credentials above to log in.
+
+---
+
+## Advanced: Use Real MongoDB Instead
+
+If you want to use a real MongoDB instance:
+
+1. Start MongoDB on `mongodb://localhost:27017`
+2. Run backend normally:
+   ```bash
+   npm run start:dev --prefix backend-core
+   ```
+   
+   (This reads from your actual MongoDB, not in-memory)
+
+---
+
+## Demo Doctor Login (API)
+
+Login via API:
+
+```bash
+curl -X POST http://localhost:3001/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"doctor.demo@neurohealth.local","password":"DoctorDemo123!"}'
+```
+
+You'll receive an `access_token` in the response to use in authenticated requests.
+
+### Customize Demo Doctor
+
+You can override demo account values in `backend-core/.env`:
+
+```env
+ENABLE_DEMO_DOCTOR=true
+DEMO_DOCTOR_EMAIL=doctor.demo@neurohealth.local
+DEMO_DOCTOR_PASSWORD=DoctorDemo123!
+DEMO_DOCTOR_NAME=Dr. Demo
+```
+
+Set `ENABLE_DEMO_DOCTOR=false` to disable auto-seeding in production.

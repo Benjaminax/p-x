@@ -44,6 +44,7 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const Joi = __importStar(require("joi"));
+const mongodb_memory_server_1 = require("mongodb-memory-server");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const logger_middleware_1 = require("./common/middleware/logger.middleware");
@@ -52,11 +53,17 @@ const users_module_1 = require("./users/users.module");
 const medical_records_module_1 = require("./medical-records/medical-records.module");
 const messaging_module_1 = require("./messaging/messaging.module");
 const patients_module_1 = require("./patients/patients.module");
+let mongoMemoryServer;
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
             .apply(logger_middleware_1.LoggerMiddleware)
             .forRoutes({ path: '(.*)', method: common_1.RequestMethod.ALL });
+    }
+    async onModuleDestroy() {
+        if (mongoMemoryServer) {
+            await mongoMemoryServer.stop();
+        }
     }
 };
 exports.AppModule = AppModule;
@@ -65,26 +72,37 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: '.env',
+                envFilePath: ['.env', '.env.example'],
                 validationSchema: Joi.object({
                     NODE_ENV: Joi.string()
                         .valid('development', 'production', 'test')
                         .default('development'),
                     PORT: Joi.number().default(3001),
-                    MONGODB_URI: Joi.string().required(),
-                    JWT_SECRET: Joi.string().required(),
+                    USE_MEMORY_DB: Joi.string().optional(),
+                    MONGODB_URI: Joi.string().default('mongodb://localhost:27017/medical-records'),
+                    JWT_SECRET: Joi.string().default('local-dev-jwt-secret'),
                     JWT_EXPIRATION: Joi.string().default('15m'),
-                    JWT_REFRESH_SECRET: Joi.string().required(),
+                    JWT_REFRESH_SECRET: Joi.string().default('local-dev-jwt-refresh-secret'),
                     JWT_REFRESH_EXPIRATION: Joi.string().default('7d'),
-                    ALLOWED_ORIGINS: Joi.string().optional(),
+                    ALLOW_ORIGINS: Joi.string().optional(),
                 }),
             }),
             mongoose_1.MongooseModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
-                useFactory: (configService) => ({
-                    uri: configService.get('MONGODB_URI'),
-                }),
+                useFactory: async (configService) => {
+                    const useMemoryDb = configService.get('USE_MEMORY_DB') === 'true';
+                    let uri;
+                    if (useMemoryDb) {
+                        mongoMemoryServer = await mongodb_memory_server_1.MongoMemoryServer.create();
+                        uri = mongoMemoryServer.getUri();
+                        console.log('Started in-memory MongoDB for local development');
+                    }
+                    else {
+                        uri = configService.get('MONGODB_URI') || 'mongodb://localhost:27017/medical-records';
+                    }
+                    return { uri };
+                },
             }),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
